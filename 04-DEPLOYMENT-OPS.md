@@ -73,7 +73,7 @@ php artisan storage:link
 php artisan serve
 ```
 
-**Access:** `http://bukupasar-backend.test`
+**Access:** `http://127.0.0.1:8000` (atau `http://bukupasar-backend.test` bila menggunakan Laragon virtual host)
 
 ### Step 2: Setup Next.js Frontend
 
@@ -86,7 +86,7 @@ npm install
 
 # Configure environment
 # Create .env.local:
-NEXT_PUBLIC_API_URL=http://bukupasar-backend.test/api
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
 
 # Start dev server
 npm run dev
@@ -97,7 +97,7 @@ npm run dev
 ### Step 3: Local Testing
 
 **Test Backend:**
-1. Access Filament: `http://bukupasar-backend.test/admin`
+1. Access Filament: `http://127.0.0.1:8000/admin`
 2. Login with admin user
 3. Test CRUD operations
 
