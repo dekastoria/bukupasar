@@ -160,6 +160,13 @@ class TenantResource extends Resource
                             ->prefix('Rp')
                             ->helperText('Tarif sewa per periode'),
 
+                        Forms\Components\TextInput::make('outstanding')
+                            ->label('Outstanding Awal')
+                            ->numeric()
+                            ->default(0)
+                            ->prefix('Rp')
+                            ->helperText('Isi jika penyewa memiliki tunggakan awal.'),
+
                         Forms\Components\Select::make('periode_sewa')
                             ->label('Periode Sewa')
                             ->options([

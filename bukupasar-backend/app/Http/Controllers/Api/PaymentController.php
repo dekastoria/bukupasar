@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class PaymentController extends Controller
 {
@@ -56,11 +57,21 @@ class PaymentController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            if ($data['jumlah'] > $tenant->outstanding) {
-                abort(422, sprintf(
-                    'Pembayaran melebihi tunggakan. Maksimal Rp %s',
-                    number_format($tenant->outstanding, 0, ',', '.')
-                ));
+            $outstanding = (int) $tenant->outstanding;
+
+            if ($outstanding <= 0) {
+                throw ValidationException::withMessages([
+                    'jumlah' => ['Tenant ini tidak memiliki tunggakan.'],
+                ]);
+            }
+
+            if ($data['jumlah'] > $outstanding) {
+                throw ValidationException::withMessages([
+                    'jumlah' => [sprintf(
+                        'Pembayaran melebihi tunggakan. Maksimal Rp %s',
+                        number_format($outstanding, 0, ',', '.')
+                    )],
+                ]);
             }
 
             $payment = Payment::create([
@@ -69,7 +80,8 @@ class PaymentController extends Controller
                 'created_by' => $request->user()->id,
             ]);
 
-            $tenant->decrement('outstanding', $data['jumlah']);
+            $newOutstanding = max(0, $outstanding - $data['jumlah']);
+            $tenant->update(['outstanding' => $newOutstanding]);
 
             return $payment;
         });

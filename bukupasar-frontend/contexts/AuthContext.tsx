@@ -28,7 +28,7 @@ export interface AuthUser {
 interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
-  login: (username: string, password: string, marketId: number) => Promise<void>;
+  login: (identifier: string, password: string, marketId: number) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -128,10 +128,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [clearSession, refreshUser]);
 
   const login = useCallback(
-    async (username: string, password: string, marketId: number) => {
+    async (identifier: string, password: string, marketId: number) => {
       try {
         const response = await api.post('/auth/login', {
-          username,
+          identifier,
           password,
           market_id: marketId,
         });

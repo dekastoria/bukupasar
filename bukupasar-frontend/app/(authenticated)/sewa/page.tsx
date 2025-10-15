@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, DollarSign, Calendar, FileText, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -29,12 +29,30 @@ export default function SewaPage() {
   const createPayment = useCreatePayment();
 
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
+  const [showOutstanding, setShowOutstanding] = useState(false);
   const [jumlah, setJumlah] = useState('');
   const [tanggal, setTanggal] = useState(
     new Date().toISOString().split('T')[0]
   );
   const [catatan, setCatatan] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    setShowOutstanding(false);
+
+    if (!selectedTenant) {
+      return;
+    }
+
+    setErrors((prev) => {
+      if (!prev.tenant) {
+        return prev;
+      }
+
+      const { tenant, ...rest } = prev;
+      return rest;
+    });
+  }, [selectedTenant]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -107,7 +125,10 @@ export default function SewaPage() {
       router.push('/');
     } catch (error: any) {
       const errorMessage =
-        error?.response?.data?.message || 'Gagal mencatat pembayaran';
+        error?.response?.data?.errors?.jumlah?.[0] ||
+        error?.response?.data?.message ||
+        error?.message ||
+        'Gagal mencatat pembayaran';
       toast.error(errorMessage);
     }
   };
@@ -118,6 +139,7 @@ export default function SewaPage() {
     setTanggal(new Date().toISOString().split('T')[0]);
     setCatatan('');
     setErrors({});
+    setShowOutstanding(false);
   };
 
   return (
@@ -157,8 +179,26 @@ export default function SewaPage() {
               <p className="text-red-600 text-base">{errors.tenant}</p>
             )}
 
-            {/* Outstanding Info */}
             {selectedTenant && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowOutstanding(true);
+                  toast.info('Data tunggakan diperbarui', {
+                    description: `Sisa tunggakan: ${formatCurrency(
+                      selectedTenant.outstanding
+                    )}`,
+                  });
+                }}
+                className="h-12 text-lg"
+              >
+                Cek Tunggakan
+              </Button>
+            )}
+
+            {/* Outstanding Info */}
+            {selectedTenant && showOutstanding && (
               <Alert className={cn(
                 "border-2",
                 selectedTenant.outstanding > 0

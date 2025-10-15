@@ -38,20 +38,37 @@ class ReportController extends Controller
     public function summary(Request $request): JsonResponse
     {
         $marketId = $request->user()->market_id;
-        $from = Carbon::parse($request->input('from'));   
-        $to = Carbon::parse($request->input('to'));
 
-        $builder = Transaction::forMarket($marketId)
-            ->dateRange($from, $to);
+        $fromInput = $request->input('from');
+        $toInput = $request->input('to');
 
-        $pemasukan = (clone $builder)->pemasukan()->sum('jumlah');
-        $pengeluaran = (clone $builder)->pengeluaran()->sum('jumlah');
+        $from = $fromInput ? Carbon::parse($fromInput)->startOfDay() : now()->startOfMonth();
+        $to = $toInput ? Carbon::parse($toInput)->endOfDay() : now()->endOfDay();
 
-        $byCategory = $builder->selectRaw('subkategori, jenis, SUM(jumlah) as total')
-            ->groupBy('jenis', 'subkategori')
-            ->orderBy('jenis')
-            ->orderBy('subkategori')
+        if ($from->greaterThan($to)) {
+            [$from, $to] = [$to->copy()->startOfDay(), $from->copy()->endOfDay()];
+        }
+
+        $transactions = Transaction::forMarket($marketId)
+            ->whereBetween('tanggal', [$from->toDateString(), $to->toDateString()])
             ->get();
+
+        $pemasukan = $transactions->where('jenis', 'pemasukan')->sum('jumlah');
+        $pengeluaran = $transactions->where('jenis', 'pengeluaran')->sum('jumlah');
+
+        $byCategory = $transactions
+            ->groupBy(fn (Transaction $tx) => $tx->jenis.'|'.$tx->subkategori)
+            ->map(function ($group) {
+                /** @var Transaction $first */
+                $first = $group->first();
+
+                return [
+                    'jenis' => $first->jenis,
+                    'subkategori' => $first->subkategori,
+                    'total' => $group->sum('jumlah'),
+                ];
+            })
+            ->values();
 
         return response()->json([
             'range' => [

@@ -19,7 +19,7 @@ interface Tenant {
 }
 
 interface TenantSearchProps {
-  onSelect: (tenant: Tenant) => void;
+  onSelect: (tenant: Tenant | null) => void;
   selectedTenant: Tenant | null;
 }
 
@@ -39,10 +39,10 @@ export function TenantSearch({ onSelect, selectedTenant }: TenantSearchProps) {
   const handleInputChange = (value: string) => {
     setSearchQuery(value);
     setShowResults(true);
-    
+
     // Clear selection if user modifies search
     if (selectedTenant) {
-      onSelect(null as any);
+      onSelect(null);
     }
   };
 

@@ -13,18 +13,27 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
-            'username' => ['required', 'string'],
+            'identifier' => ['required', 'string'],
             'password' => ['required', 'string'],
             'market_id' => ['required', 'integer', 'exists:markets,id'],
         ]);
 
-        $user = User::where('username', $credentials['username'])
+        $identifier = $credentials['identifier'];
+
+        $user = User::query()
             ->where('market_id', $credentials['market_id'])
+            ->where(function ($query) use ($identifier) {
+                if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+                    $query->where('email', $identifier);
+                } else {
+                    $query->where('username', $identifier);
+                }
+            })
             ->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             return response()->json([
-                'message' => 'Username atau password salah.',
+                'message' => 'Email/username atau password salah.',
             ], 401);
         }
 

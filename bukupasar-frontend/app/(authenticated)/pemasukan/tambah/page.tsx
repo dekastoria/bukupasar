@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -14,6 +14,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { useCreateTransaction } from '@/hooks/useCreateTransaction';
 import { useTenants } from '@/hooks/useTenants';
 import { formatCurrency } from '@/lib/utils';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 type Category = {
   id: number;
@@ -55,9 +56,19 @@ export default function TambahPemasukanPage() {
   const selectedCategory = categories.find((cat: Category) => cat.nama === formData.kategori);
   const requiresCatatan = selectedCategory?.wajib_keterangan ?? false;
   const isSewa = formData.kategori.toLowerCase().includes('sewa');
+  const selectedTenant = useMemo(
+    () => tenants.find((tenant: Tenant) => tenant.id === Number(formData.tenant_id)),
+    [tenants, formData.tenant_id],
+  );
+  const [showOutstanding, setShowOutstanding] = useState(false);
 
   const handleCategorySelect = (kategori: string) => {
-    setFormData((prev) => ({ ...prev, kategori }));
+    setFormData((prev) => ({
+      ...prev,
+      kategori,
+      tenant_id: kategori.toLowerCase().includes('sewa') ? prev.tenant_id : '',
+    }));
+    setShowOutstanding(false);
     setStep(2);
   };
 
@@ -77,6 +88,21 @@ export default function TambahPemasukanPage() {
     if (isSewa && !formData.tenant_id) {
       toast.error('Tenant wajib dipilih untuk transaksi sewa');
       return false;
+    }
+    if (isSewa) {
+      const outstanding = selectedTenant?.outstanding ?? 0;
+
+      if (outstanding <= 0) {
+        toast.error('Tenant ini tidak memiliki tunggakan. Gunakan halaman Pembayaran Sewa.');
+        return false;
+      }
+
+      if (Number(formData.nominal) > outstanding) {
+        toast.error(
+          `Nominal melebihi sisa tunggakan. Maksimal ${formatCurrency(outstanding)}.`,
+        );
+        return false;
+      }
     }
     if (requiresCatatan && !formData.catatan.trim()) {
       toast.error(`Catatan wajib diisi untuk kategori ${formData.kategori}`);
@@ -196,6 +222,80 @@ export default function TambahPemasukanPage() {
               </p>
             </div>
 
+            {isSewa && (
+              <div className="space-y-3">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                  <div className="flex-1 space-y-2">
+                    <Label htmlFor="tenant" className="text-lg text-slate-700">
+                      Tenant / Penyewa <span className="text-red-600">*</span>
+                    </Label>
+                    {loadingTenants ? (
+                      <p className="text-base text-slate-600">Memuat data tenant...</p>
+                    ) : (
+                      <Select
+                        value={formData.tenant_id}
+                        onValueChange={(value) => {
+                          handleFormChange('tenant_id', value);
+                          setShowOutstanding(false);
+                        }}
+                      >
+                        <SelectTrigger className="h-14 text-xl">
+                          <SelectValue placeholder="Pilih tenant" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {tenants.length === 0 ? (
+                            <SelectItem value="" disabled>
+                              Tidak ada tenant tersedia
+                            </SelectItem>
+                          ) : (
+                            tenants.map((tenant: Tenant) => (
+                              <SelectItem key={tenant.id} value={String(tenant.id)}>
+                                {tenant.nomor_lapak} - {tenant.nama}
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                    )}
+                    <p className="text-sm text-slate-500">
+                      Wajib pilih tenant untuk transaksi sewa
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-14 px-6 text-lg"
+                    onClick={() => {
+                      if (!formData.tenant_id) {
+                        toast.error('Pilih tenant terlebih dahulu');
+                        return;
+                      }
+                      setShowOutstanding(true);
+                    }}
+                    disabled={!formData.tenant_id}
+                  >
+                    Cek Tunggakan
+                  </Button>
+                </div>
+
+                {showOutstanding && selectedTenant && (
+                  <Alert className="border-slate-200 bg-slate-50">
+                    <AlertDescription className="text-lg text-slate-700">
+                      <p className="font-semibold text-slate-900">
+                        {selectedTenant.nomor_lapak} - {selectedTenant.nama}
+                      </p>
+                      <p className="mt-1 text-base">
+                        Sisa tunggakan:{' '}
+                        <span className="font-semibold text-red-600">
+                          {formatCurrency(selectedTenant.outstanding)}
+                        </span>
+                      </p>
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="nominal" className="text-lg text-slate-700">
                 Nominal (Rp) <span className="text-red-600">*</span>
@@ -226,42 +326,6 @@ export default function TambahPemasukanPage() {
                 required
               />
             </div>
-
-            {isSewa && (
-              <div className="space-y-2">
-                <Label htmlFor="tenant" className="text-lg text-slate-700">
-                  Tenant / Penyewa <span className="text-red-600">*</span>
-                </Label>
-                {loadingTenants ? (
-                  <p className="text-base text-slate-600">Memuat data tenant...</p>
-                ) : (
-                  <Select
-                    value={formData.tenant_id}
-                    onValueChange={(value) => handleFormChange('tenant_id', value)}
-                  >
-                    <SelectTrigger className="h-14 text-xl">
-                      <SelectValue placeholder="Pilih tenant" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {tenants.length === 0 ? (
-                        <SelectItem value="none" disabled>
-                          Tidak ada tenant tersedia
-                        </SelectItem>
-                      ) : (
-                        tenants.map((tenant: Tenant) => (
-                          <SelectItem key={tenant.id} value={String(tenant.id)}>
-                            {tenant.nomor_lapak} - {tenant.nama}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                )}
-                <p className="text-sm text-slate-500">
-                  Wajib pilih tenant untuk transaksi sewa
-                </p>
-              </div>
-            )}
 
             <div className="space-y-2">
               <Label htmlFor="catatan" className="text-lg text-slate-700">

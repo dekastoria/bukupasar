@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -11,10 +12,11 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [marketId, setMarketId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,7 +29,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      await login(username.trim(), password, Number(marketId));
+      await login(identifier.trim(), password, Number(marketId));
       toast.success('Berhasil masuk. Selamat bekerja!');
     } catch (error: any) {
       const message =
@@ -54,24 +56,25 @@ export default function LoginPage() {
         <CardHeader className="pb-4 text-center sm:text-left">
           <CardTitle className="text-2xl sm:text-3xl text-slate-800">Masuk ke Akun Anda</CardTitle>
           <CardDescription className="text-base sm:text-lg text-slate-600">
-            Gunakan username, password, dan ID pasar yang telah diberikan admin pasar.
+            Gunakan email (atau username), password, dan ID pasar yang telah diberikan admin
+            pasar.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-lg text-slate-700">
-                Username
+              <Label htmlFor="identifier" className="text-lg text-slate-700">
+                Email atau Username
               </Label>
               <Input
-                id="username"
+                id="identifier"
                 type="text"
-                value={username}
+                value={identifier}
                 autoComplete="username"
-                onChange={(event) => setUsername(event.target.value)}
+                onChange={(event) => setIdentifier(event.target.value)}
                 required
                 className="h-14 text-xl bg-white"
-                placeholder="contoh: adminpasar"
+                placeholder="contoh: admin@example.com"
               />
             </div>
 
@@ -79,16 +82,26 @@ export default function LoginPage() {
               <Label htmlFor="password" className="text-lg text-slate-700">
                 Password
               </Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                autoComplete="current-password"
-                onChange={(event) => setPassword(event.target.value)}
-                required
-                className="h-14 text-xl bg-white"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  autoComplete="current-password"
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                  className="h-14 text-xl bg-white pr-14"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                  aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                >
+                  {showPassword ? <EyeOff className="h-6 w-6" /> : <Eye className="h-6 w-6" />}
+                </button>
+              </div>
             </div>
 
             <div className="space-y-2">
