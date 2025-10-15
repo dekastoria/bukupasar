@@ -1,0 +1,26 @@
+### Global ignores
+.DS_Store
+Thumbs.db
+
+### Backend (Laravel)
+/bukupasar-backend/vendor/
+/bukupasar-backend/node_modules/
+/bukupasar-backend/storage/app/public
+/bukupasar-backend/storage/framework/
+/bukupasar-backend/storage/logs/
+/bukupasar-backend/.env
+/bukupasar-backend/.env.backup
+/bukupasar-backend/.env.local
+/bukupasar-backend/.env.testing
+/bukupasar-backend/phpunit.xml.cache
+
+### Frontend (Next.js)
+/bukupasar-frontend/node_modules/
+/bukupasar-frontend/.next/
+/bukupasar-frontend/out/
+/bukupasar-frontend/.env.local
+/bukupasar-frontend/.env*
+/bukupasar-frontend/npm-debug.log*
+/bukupasar-frontend/yarn-debug.log*
+/bukupasar-frontend/yarn-error.log*
+/bukupasar-frontend/pnpm-debug.log*
