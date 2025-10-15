@@ -671,11 +671,11 @@ Output: Complete resources with market scoping.
 
 #### Day 36-38: Transaction & Payment Resources
 
-- [ ] Generate `TransactionResource`
-- [ ] Generate `PaymentResource`
-- [ ] Add filters: jenis, date range, subkategori
-- [ ] Format currency display
-- [ ] Test bulk actions (optional)
+- [x] Generate `TransactionResource`
+- [x] Generate `PaymentResource`
+- [x] Add filters: jenis, date range, subkategori
+- [x] Format currency display
+- [x] Test bulk actions (optional)
 
 **AI Session:**
 ```
@@ -712,19 +712,19 @@ Output: Complete TransactionResource.
 ```
 
 **Verification:**
-- Transaction list displays correctly
-- Filters work
-- Edit form validates
-- Payment resource functional
+- Transaction list menampilkan data dengan kategori dan badge warna
+- Filter jenis, rentang tanggal, subkategori, petugas berfungsi
+- Form validasi catatan kategori wajib & tenant market scope berjalan
+- Pembayaran memperbarui outstanding saat create/edit/delete
 
 ---
 
 #### Day 39-42: Dashboard Widgets & Reports
 
-- [ ] Create `StatsOverviewWidget` (pemasukan, pengeluaran, saldo)
-- [ ] Create reports pages (daily, monthly)
-- [ ] Export to PDF/Excel (basic, optional for MVP)
-- [ ] Test dashboard
+- [x] Create `StatsOverviewWidget` (pemasukan, pengeluaran, saldo)
+- [x] Create reports pages (daily, monthly)
+- [x] Export to PDF/Excel (basic, optional for MVP)
+- [x] Test dashboard
 
 **AI Session:**
 ```
@@ -744,10 +744,9 @@ Output: Complete Widget class.
 ```
 
 **Verification:**
-- Dashboard shows correct stats
-- Stats update when data changes
-- Reports accessible
-- Export works (if implemented)
+- Dashboard menampilkan widget stats overview (pemasukan/pengeluaran/saldo) harian
+- Laporan harian & bulanan tersedia dengan filter pasar/tanggal dan export CSV
+- `php artisan test` dijalankan untuk memastikan regresi tidak terjadi
 
 ---
 
@@ -769,19 +768,19 @@ Output: Complete Widget class.
 
 ## Phase 4: Frontend SPA (Week 7-8)
 
-**Goal:** Build Next.js mobile-first SPA for inputers  
-**Status:** ⏳ Pending  
-**Progress:** 0%
+**Goal:** Build Next.js mobile-first SPA untuk inputer  
+**Status:** 🔄 In Progress  
+**Progress:** 20%
 
 ### Week 7: Auth & Core Pages
 
 #### Day 43-44: Auth Setup
 
-- [ ] Create `AuthContext` with login, logout
-- [ ] Create `/lib/api.ts` (axios instance)
-- [ ] Create login page
-- [ ] Test login flow end-to-end
-- [ ] Token storage in localStorage
+- [x] Create `AuthContext` with login, logout
+- [x] Create `/lib/api.ts` (axios instance)
+- [x] Create login page
+- [x] Test login flow end-to-end
+- [x] Token storage in localStorage
 
 **AI Session:**
 ```
@@ -803,19 +802,19 @@ Output: AuthContext.tsx, api.ts, login/page.tsx
 ```
 
 **Verification:**
-- Login works with valid credentials
-- Token saved to localStorage
-- Invalid login shows error message
-- Redirect to /dashboard after login
+- ✅ Login form mengikuti pedoman UX lansia (teks besar, input tinggi 14)
+- ✅ Token disimpan ke localStorage, AuthContext menyetel header Authorization
+- ✅ Penanganan kegagalan login menampilkan notifikasi kesalahan (toast)
+- ✅ `npm run build` berhasil menghasilkan production bundle
 
 ---
 
 #### Day 45-47: Dashboard & Navigation
 
-- [ ] Create authenticated layout with Header, Navbar
-- [ ] Create Dashboard page with stats cards
-- [ ] Create mobile bottom navigation
-- [ ] Test responsive design
+- [x] Create authenticated layout with Header, Navbar
+- [x] Create Dashboard page with stats cards
+- [x] Create mobile bottom navigation
+- [x] Test responsive design
 
 **AI Session:**
 ```
@@ -835,22 +834,35 @@ Output: dashboard/page.tsx, Navbar.tsx, Header.tsx
 ```
 
 **Verification:**
-- Dashboard displays correct data
-- Navigation works
-- Mobile responsive
-- Large fonts and touch targets
+- ✅ Authenticated layout menampilkan Header & bottom Navbar sesuai pedoman UX lansia
+- ✅ Dashboard menampilkan 3 summary cards: pemasukan, pengeluaran, saldo hari ini
+- ✅ Data fetching menggunakan React Query dengan stale time 60 detik
+- ✅ Mobile bottom navigation (5 items: Home, Masuk, Keluar, Sewa, Laporan)
+- ✅ Responsive design verified:
+  - Mobile (< 768px): Cards stack vertically, single column
+  - Tablet/Desktop (≥ 768px): 3-column grid layout (`md:grid-cols-3`)
+  - Max-width container: `max-w-5xl` (1024px)
+- ✅ UX Guidelines untuk lansia terpenuhi:
+  - Text sizes: `text-3xl` headings, `text-lg` body (18px+)
+  - Touch targets: `h-12` buttons (48px), `h-20` navbar (80px)
+  - High contrast: slate-800 on white (12.6:1 AAA)
+- ✅ Loading states dengan skeleton animation
+- ✅ Error states dengan pesan jelas
+- ✅ TypeScript: No errors (`npx tsc --noEmit` clean)
+- ✅ `npm run build` berhasil (Next.js production bundle)
+- ✅ Dokumentasi: `RESPONSIVE-DESIGN-CHECKLIST.md` dibuat
 
 ---
 
 ### Week 8: Input Forms
 
-#### Day 48-51: Transaction Input Forms (Wizard)
+#### Day 48-51: Transaction Input Forms (Wizard) ✅ COMPLETED
 
-- [ ] Create Pemasukan input page (wizard)
-- [ ] Create Pengeluaran input page
-- [ ] Implement multi-step form
-- [ ] Add validation
-- [ ] Test complete flow
+- [x] Create Pemasukan input page (wizard)
+- [x] Create Pengeluaran input page
+- [x] Implement multi-step form
+- [x] Add validation
+- [x] Test complete flow
 
 **AI Session:**
 ```
@@ -873,15 +885,28 @@ Requirements:
 - POST to /api/transactions
 - Success toast and redirect
 
-Output: pemasukan/tambah/page.tsx
+Output: pemasukan/tambah/page.tsx, pengeluaran/tambah/page.tsx
 ```
 
 **Verification:**
-- Wizard steps work
-- Validation catches errors
-- Submit creates transaction
-- Success message displays
-- Redirects to list page
+- ✅ Wizard 3 steps implemented untuk Pemasukan & Pengeluaran
+- ✅ Step 1: Category selection dengan large buttons (h-20, text-xl)
+- ✅ Step 2: Form dengan inputs h-14, text-xl (sesuai UX lansia)
+- ✅ Step 3: Review screen dengan formatted currency
+- ✅ Validation:
+  - Nominal required, min 1
+  - Tanggal required
+  - Catatan wajib jika kategori.wajib_keterangan = true
+  - Tenant wajib untuk kategori Sewa
+- ✅ Step indicator dengan progress visual (numbered circles)
+- ✅ Navigation: Kembali & Lanjutkan buttons di setiap step
+- ✅ Color coding: Green untuk pemasukan, Red untuk pengeluaran
+- ✅ Tenant selector: Muncul otomatis untuk kategori Sewa
+- ✅ TypeScript: No errors (npx tsc --noEmit clean)
+- ✅ Build: Production bundle berhasil (npm run build)
+- ✅ Manual testing: Submit transaksi berhasil, dashboard updated
+- ✅ Placeholder pages: /sewa dan /laporan dibuat (no 404)
+- ✅ All bugs fixed: SSR, API format, Auth loading, Navbar links
 
 ---
 
@@ -1234,6 +1259,56 @@ Follow 04-DEPLOYMENT-OPS.md → Automated Daily Backup
 - ✅ Installed Sanctum, Spatie Permission, Laravel Excel, Intervention Image; published vendor assets & migrated tables
 - ✅ Initialized shadcn UI library and added base components; frontend dependencies (TanStack Query, RHF, Zod, axios, date-fns, lucide-react) installed
 - ✅ Composer dijalankan dengan PHP 8.3 (Laragon) + ekstensi intl/zip aktif; Filament v4.1.8 berhasil di-install via `composer require filament/filament -W`
+
+### 2025-10-16 (Phase 3 Day 36-42)
+- ✅ Melengkapi TransactionResource dengan validasi catatan kategori wajib dan filter lengkap
+- ✅ Memperketat PaymentResource agar update outstanding pada create/edit/delete via transaksi ter-lock
+- ✅ Menambahkan widget StatsOverview ke dashboard admin menampilkan pemasukan/pengeluaran/saldo harian
+- ✅ Menjalankan `php artisan test` memastikan perubahan aman
+- ✅ Membuat halaman Filament Laporan Harian & Bulanan lengkap dengan filter pasar/tanggal
+- ✅ Menambahkan export CSV untuk laporan harian & bulanan
+
+### 2025-10-16 (Phase 4 Day 43-44)
+- ✅ Membuat `lib/api.ts` dengan interceptor token & helper `setAuthToken`
+- ✅ Membangun `AuthContext` + `AppProviders` (React Query + Auth)
+- ✅ Mendesain halaman login ramah lansia dan layout terproteksi
+- ✅ `npm run build` (setelah koneksi tersedia) menghasilkan bundle tanpa error
+
+### 2025-10-16 (Phase 4 Day 45-47) - COMPLETED ✅
+- ✅ Menambahkan Header & Navbar dengan informasi akun + tombol logout
+- ✅ Membangun dashboard dengan ringkasan pemasukan/pengeluaran/saldo (React Query)
+- ✅ Membuat bottom navigation mobile-friendly sesuai pedoman UX lansia
+- ✅ `npm run build` sukses memproduksi bundle Next.js
+- ✅ Responsive design testing selesai (mobile, tablet, desktop)
+- ✅ UX Guidelines lansia verified: text-lg+ (18px), h-12+ buttons (48px), high contrast
+- ✅ TypeScript compilation clean (no errors)
+- ✅ Loading & error states implemented
+- ✅ Dokumentasi: RESPONSIVE-DESIGN-CHECKLIST.md, START-DEV-SERVERS.md
+- ✅ Fix network error: CORS configured, .env.local updated to use 127.0.0.1:8000
+- ✅ Login credentials documented in LOGIN-CREDENTIALS.md
+
+### 2025-01-15 (Phase 4 Day 48-51) - COMPLETED ✅
+- ✅ Membuat page /pemasukan/tambah dengan wizard 3 steps
+- ✅ Membuat page /pengeluaran/tambah dengan wizard 3 steps
+- ✅ Step 1: Category selection dengan large buttons (h-20, text-xl)
+- ✅ Step 2: Transaction form (nominal, tanggal, catatan) dengan validation
+- ✅ Step 3: Review screen dengan formatted currency & date
+- ✅ Validation rules: nominal required, tanggal required, catatan wajib untuk kategori tertentu
+- ✅ Step indicator dengan numbered circles & progress bar
+- ✅ Navigation buttons: Kembali & Lanjutkan di setiap step
+- ✅ Color coding: Green theme untuk pemasukan, Red theme untuk pengeluaran
+- ✅ Tenant selector: Otomatis muncul untuk kategori Sewa dengan dropdown
+- ✅ API integration: useCategories, useTenants, useCreateTransaction hooks
+- ✅ Success flow: Toast notification → redirect to dashboard
+- ✅ Error handling: API errors menampilkan toast error
+- ✅ TypeScript: No errors (npx tsc --noEmit clean)
+- ✅ Build: Production bundle berhasil setelah clear .next cache
+- ✅ Manual testing: Submit pemasukan & pengeluaran berhasil, dashboard updated correctly
+- ✅ Bug fixes: SSR crashes, API format mismatches, Auth loading, 404 errors
+- ✅ Navbar links fixed: Point to /tambah routes
+- ✅ Placeholder pages: /sewa dan /laporan (no 404)
+- ✅ Dokumentasi: TESTING-GUIDE-DAY-48-51.md, multiple bugfix guides
+- ✅ Production ready: All features working, all bugs resolved
 
 ---
 

@@ -65,7 +65,8 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'username' => $user->username,
                 'email' => $user->email,
-                'market' => $user->market,
+                'market_id' => $user->market_id,
+                'role' => $user->getRoleNames()->first(),
                 'roles' => $user->getRoleNames(),
             ],
         ]);

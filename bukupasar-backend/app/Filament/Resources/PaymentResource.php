@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Tenant;
 use App\Models\User;
 use BackedEnum;
+use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
@@ -25,6 +26,7 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class PaymentResource extends Resource
 {
@@ -211,12 +213,13 @@ class PaymentResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make()
+                    ->using(fn (Payment $record) => static::deletePaymentWithOutstandingRollback($record)),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -295,5 +298,20 @@ class PaymentResource extends Resource
         }
 
         return $query->pluck('name', 'id')->all();
+    }
+
+    protected static function deletePaymentWithOutstandingRollback(Payment $payment): bool
+    {
+        return DB::transaction(function () use ($payment) {
+            $tenant = Tenant::query()
+                ->lockForUpdate()
+                ->find($payment->tenant_id);
+
+            if ($tenant) {
+                $tenant->increment('outstanding', (int) $payment->jumlah);
+            }
+
+            return (bool) $payment->delete();
+        });
     }
 }

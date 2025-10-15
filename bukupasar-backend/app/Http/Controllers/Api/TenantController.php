@@ -113,6 +113,7 @@ class TenantController extends Controller
     public function search(Request $request, string $query): JsonResponse
     {
         $results = Tenant::forMarket($request->user()->market_id)
+            ->with('rentalType')
             ->search($query)
             ->orderBy('nomor_lapak')
             ->limit(10)

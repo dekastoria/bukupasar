@@ -14,6 +14,7 @@ class Tenant extends Model
 
     protected $fillable = [
         'market_id',
+        'rental_type_id',
         'nama',
         'nomor_lapak',
         'hp',
@@ -21,15 +22,28 @@ class Tenant extends Model
         'foto_profile',
         'foto_ktp',
         'outstanding',
+        'tanggal_mulai_sewa',
+        'tanggal_akhir_sewa',
+        'tarif_sewa',
+        'periode_sewa',
+        'catatan_sewa',
     ];
 
     protected $casts = [
         'outstanding' => 'integer',
+        'tanggal_mulai_sewa' => 'date',
+        'tanggal_akhir_sewa' => 'date',
+        'tarif_sewa' => 'integer',
     ];
 
     public function market(): BelongsTo
     {
         return $this->belongsTo(Market::class);
+    }
+
+    public function rentalType(): BelongsTo
+    {
+        return $this->belongsTo(RentalType::class);
     }
 
     public function transactions(): HasMany
@@ -60,8 +74,42 @@ class Tenant extends Model
         return 'Rp ' . number_format($this->outstanding, 0, ',', '.');
     }
 
+    public function getFormattedTarifSewaAttribute(): string
+    {
+        return 'Rp '.number_format($this->tarif_sewa, 0, ',', '.');
+    }
+
     public function hasOutstanding(): bool
     {
         return $this->outstanding > 0;
+    }
+
+    public function isSewaActive(): bool
+    {
+        if (!$this->tanggal_mulai_sewa || !$this->tanggal_akhir_sewa) {
+            return false;
+        }
+
+        $today = now()->startOfDay();
+
+        return $this->tanggal_mulai_sewa <= $today && $this->tanggal_akhir_sewa >= $today;
+    }
+
+    public function isSewaExpired(): bool
+    {
+        if (!$this->tanggal_akhir_sewa) {
+            return false;
+        }
+
+        return $this->tanggal_akhir_sewa < now()->startOfDay();
+    }
+
+    public function getDaysUntilSewaExpires(): ?int
+    {
+        if (!$this->tanggal_akhir_sewa) {
+            return null;
+        }
+
+        return now()->startOfDay()->diffInDays($this->tanggal_akhir_sewa, false);
     }
 }

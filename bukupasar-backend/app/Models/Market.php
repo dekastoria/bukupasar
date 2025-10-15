@@ -26,6 +26,11 @@ class Market extends Model
         return $this->hasMany(Tenant::class);
     }
 
+    public function rentalTypes(): HasMany
+    {
+        return $this->hasMany(RentalType::class);
+    }
+
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);

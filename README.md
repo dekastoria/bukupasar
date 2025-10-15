@@ -60,6 +60,16 @@ Bukupasar adalah sistem web untuk mengelola keuangan pasar tradisional dengan fi
    - Week-by-week checklist
    - Daily log
 
+4. **[LOGIN-CREDENTIALS.md](LOGIN-CREDENTIALS.md)** 🔐 (2 min)
+   - Login credentials untuk testing
+   - Username & password semua role
+   - Market ID untuk development
+
+5. **[START-DEV-SERVERS.md](START-DEV-SERVERS.md)** 🚀 (3 min)
+   - Cara menjalankan backend & frontend servers
+   - Troubleshooting network errors
+   - Quick restart scripts
+
 ---
 
 ### 📖 Implementation Guides

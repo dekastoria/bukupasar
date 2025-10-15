@@ -9,6 +9,7 @@ use App\Models\Tenant;
 use App\Models\Transaction;
 use App\Models\User;
 use BackedEnum;
+use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
@@ -141,7 +142,11 @@ class TransactionResource extends Resource
                     ->label('Catatan')
                     ->rows(3)
                     ->columnSpanFull()
-                    ->nullable(),
+                    ->required(fn (callable $get) => static::categoryRequiresNote(
+                        $get('market_id') ?? auth()->user()?->market_id,
+                        $get('subkategori')
+                    ))
+                    ->helperText('Wajib diisi jika kategori meminta keterangan.'),
             ]);
     }
 
@@ -232,12 +237,12 @@ class TransactionResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -329,5 +334,18 @@ class TransactionResource extends Resource
         }
 
         return $query->pluck('name', 'id')->all();
+    }
+
+    protected static function categoryRequiresNote(?int $marketId, ?string $subkategori): bool
+    {
+        if (! $marketId || ! $subkategori) {
+            return false;
+        }
+
+        return Category::query()
+            ->forMarket($marketId)
+            ->where('nama', $subkategori)
+            ->where('wajib_keterangan', true)
+            ->exists();
     }
 }
