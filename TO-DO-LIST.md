@@ -55,9 +55,9 @@ Documentation structure optimized for AI context loading. Files are concise (~60
 #### Day 1-2: Create Projects
 - [x] Create Laravel project: `bukupasar-backend`
 - [x] Create Next.js project: `bukupasar-frontend`
-- [ ] Initialize Git repositories for both
-- [ ] Configure `.env` files
-- [ ] First commit to Git
+- [x] Initialize Git repositories for both
+- [x] Configure `.env` files
+- [x] First commit to Git
 
 **AI Session:**
 ```
@@ -78,19 +78,19 @@ Task: Walk me through creating Laravel and Next.js projects step-by-step.
 #### Day 3-4: Install Dependencies
 
 **Laravel:**
-- [ ] Install Laravel Sanctum
-- [ ] Install Spatie Permission
-- [ ] Install Filament 3
-- [ ] Install Laravel Excel
-- [ ] Publish vendor assets
-- [ ] Run vendor migrations
+- [x] Install Laravel Sanctum
+- [x] Install Spatie Permission
+- [x] Install Filament 4 *(gunakan PHP 8.3 CLI + `composer require filament/filament -W`)*
+- [x] Install Laravel Excel
+- [x] Publish vendor assets
+- [x] Run vendor migrations
 
 **Next.js:**
-- [ ] Setup shadcn/ui
-- [ ] Install TanStack Query
-- [ ] Install React Hook Form + Zod
-- [ ] Install axios
-- [ ] Install date-fns, lucide-react
+- [x] Setup shadcn/ui
+- [x] Install TanStack Query
+- [x] Install React Hook Form + Zod
+- [x] Install axios
+- [x] Install date-fns, lucide-react
 
 **AI Session:**
 ```
@@ -111,10 +111,10 @@ Verify installations are successful.
 
 #### Day 5: Create Database
 
-- [ ] Create MySQL database: `bukupasar_dev`
-- [ ] Create database user with privileges
-- [ ] Configure Laravel `.env` with DB credentials
-- [ ] Test connection: `php artisan migrate` (default migrations)
+- [x] Create MySQL database: `bukupasar_dev`
+- [x] Create database user with privileges (user: `bukupasar_dev_user`)
+- [x] Configure Laravel `.env` with DB credentials
+- [x] Test connection: `php artisan migrate` (default migrations)
 
 **AI Session:**
 ```
@@ -134,16 +134,16 @@ Test: php artisan migrate should work.
 
 #### Day 6-7: Generate All Migrations
 
-- [ ] Migration: `create_markets_table`
-- [ ] Migration: `add_market_id_to_users_table`
-- [ ] Migration: `create_tenants_table`
-- [ ] Migration: `create_categories_table`
-- [ ] Migration: `create_transactions_table`
-- [ ] Migration: `create_payments_table`
-- [ ] Migration: `create_settings_table`
-- [ ] Migration: `create_audit_logs_table`
-- [ ] Migration: `create_uploads_table`
-- [ ] Run all migrations: `php artisan migrate`
+- [x] Migration: `create_markets_table`
+- [x] Migration: `add_market_id_to_users_table`
+- [x] Migration: `create_tenants_table`
+- [x] Migration: `create_categories_table`
+- [x] Migration: `create_transactions_table`
+- [x] Migration: `create_payments_table`
+- [x] Migration: `create_settings_table`
+- [x] Migration: `create_audit_logs_table`
+- [x] Migration: `create_uploads_table`
+- [x] Run all migrations: `php artisan migrate`
 
 **AI Session (for each table):**
 ```
@@ -173,15 +173,15 @@ Output: Complete migration file with up() and down() methods.
 
 #### Day 8-10: Create All Models
 
-- [ ] Model: `Market` with relationships
-- [ ] Modify Model: `User` (add market_id, relationships, roles)
-- [ ] Model: `Tenant` with scopes
-- [ ] Model: `Category` with scopes
-- [ ] Model: `Transaction` with scopes and helpers
-- [ ] Model: `Payment` with relationships
-- [ ] Model: `Setting` with helpers
-- [ ] Model: `AuditLog`
-- [ ] Model: `Upload`
+- [x] Model: `Market` with relationships
+- [x] Modify Model: `User` (add market_id, relationships, roles)
+- [x] Model: `Tenant` with scopes
+- [x] Model: `Category` with scopes
+- [x] Model: `Transaction` with scopes and helpers
+- [x] Model: `Payment` with relationships
+- [x] Model: `Setting` with helpers
+- [x] Model: `AuditLog`
+- [x] Model: `Upload`
 
 **AI Session (for each model):**
 ```
@@ -237,11 +237,11 @@ Transaction::forMarket(1)->get();
 
 #### Day 11-12: Create Seeders
 
-- [ ] Seeder: `MarketSeeder` (create test market)
-- [ ] Seeder: `RoleSeeder` (create 4 roles: admin_pusat, admin_pasar, inputer, viewer)
-- [ ] Seeder: `UserSeeder` (create admin users for each role)
-- [ ] Seeder: `CategorySeeder` (create default categories)
-- [ ] Run: `php artisan db:seed`
+- [x] Seeder: `MarketSeeder` (create test market)
+- [x] Seeder: `RoleSeeder` (create 4 roles: admin_pusat, admin_pasar, inputer, viewer)
+- [x] Seeder: `UserSeeder` (create admin users for each role)
+- [x] Seeder: `CategorySeeder` (create default categories)
+- [x] Run: `php artisan db:seed`
 
 **AI Session:**
 ```
@@ -1230,7 +1230,10 @@ Follow 04-DEPLOYMENT-OPS.md → Automated Daily Backup
 ### 2025-10-15 (Phase 1 Kickoff)
 - ✅ Created Laravel project `bukupasar-backend` per README instructions
 - ✅ Created Next.js project `bukupasar-frontend` per README instructions
-- 🔁 Pending: Initialize Git repos and configure environment files
+- ✅ Git repo bootstrap, environment variables configured, dev servers verified
+- ✅ Installed Sanctum, Spatie Permission, Laravel Excel, Intervention Image; published vendor assets & migrated tables
+- ✅ Initialized shadcn UI library and added base components; frontend dependencies (TanStack Query, RHF, Zod, axios, date-fns, lucide-react) installed
+- ✅ Composer dijalankan dengan PHP 8.3 (Laragon) + ekstensi intl/zip aktif; Filament v4.1.8 berhasil di-install via `composer require filament/filament -W`
 
 ---
 
