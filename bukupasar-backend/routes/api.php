@@ -6,7 +6,17 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\TransactionController;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+
+// Health check endpoint
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'OK',
+        'timestamp' => now()->toISOString(),
+        'service' => 'Bukupasar API',
+    ]);
+});
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 

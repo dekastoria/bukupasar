@@ -14,7 +14,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error?.response?.status === 401) {
-      if (typeof window !== "undefined") {
+      // Only access localStorage in browser environment
+      if (typeof localStorage !== "undefined") {
         localStorage.removeItem("bukupasar_token");
       }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Header from '@/components/layouts/Header';
@@ -14,6 +14,11 @@ export default function AuthenticatedLayout({
 }) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -21,7 +26,7 @@ export default function AuthenticatedLayout({
     }
   }, [isLoading, user, router]);
 
-  if (isLoading || (!user && typeof window !== 'undefined')) {
+  if (isLoading || (!isClient)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-100 text-slate-700">
         <div className="text-xl font-medium">Memuat data akun…</div>

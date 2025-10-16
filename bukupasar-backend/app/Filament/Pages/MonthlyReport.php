@@ -9,10 +9,7 @@ use Carbon\Carbon;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Pages\Page;
-use Filament\Schemas\Components\EmbeddedTable;
-use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -20,7 +17,6 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use UnitEnum;
 
 class MonthlyReport extends Page implements HasTable
 {
@@ -28,9 +24,7 @@ class MonthlyReport extends Page implements HasTable
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected static ?string $navigationLabel = 'Laporan Bulanan';
-
-    protected static string | UnitEnum | null $navigationGroup = 'Laporan';
+    protected static string | null $navigationLabel = 'Laporan Bulanan';
 
     protected static ?int $navigationSort = 61;
 
@@ -46,18 +40,22 @@ class MonthlyReport extends Page implements HasTable
         $this->filterMarketId = $user?->market_id;
     }
 
+    public function getTitle(): string | Htmlable
+    {
+        $month = $this->filterMonth ?: Carbon::today()->format('Y-m');
+        try {
+            $date = Carbon::createFromFormat('Y-m', $month);
+            return "Laporan Bulanan - " . $date->translatedFormat('F Y');
+        } catch (\Exception) {
+            return 'Laporan Bulanan';
+        }
+    }
+
     public static function shouldRegisterNavigation(): bool
     {
         $user = auth()->user();
 
         return $user?->hasAnyRole(['admin_pusat', 'admin_pasar']) ?? false;
-    }
-
-    public function content(Schema $schema): Schema
-    {
-        return $schema->components([
-            EmbeddedTable::make(),
-        ]);
     }
 
     protected function getHeaderActions(): array
@@ -110,12 +108,33 @@ class MonthlyReport extends Page implements HasTable
         ];
     }
 
-    protected function getTableQuery(): Builder
+    public function table(Table $table): Table
     {
-        return $this->baseQuery();
+        return $table
+            ->query($this->getTableQuery())
+            ->columns([
+                Tables\Columns\TextColumn::make('tanggal')
+                    ->label('Tanggal')
+                    ->date('d M Y')
+                    ->sortable(false),
+                Tables\Columns\TextColumn::make('total_pemasukan')
+                    ->label('Total Pemasukan')
+                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))
+                    ->sortable(false),
+                Tables\Columns\TextColumn::make('total_pengeluaran')
+                    ->label('Total Pengeluaran')
+                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))
+                    ->sortable(false),
+                Tables\Columns\TextColumn::make('saldo')
+                    ->label('Saldo')
+                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))
+                    ->sortable(false),
+            ])
+            ->defaultSort('tanggal', 'asc')
+            ->paginated([10, 15, 25, 50]);
     }
 
-    protected function baseQuery(): Builder
+    protected function getTableQuery(): Builder
     {
         $user = auth()->user();
 
@@ -125,10 +144,10 @@ class MonthlyReport extends Page implements HasTable
             ->selectRaw('SUM(CASE WHEN jenis = "pengeluaran" THEN jumlah ELSE 0 END) as total_pengeluaran')
             ->selectRaw('SUM(CASE WHEN jenis = "pemasukan" THEN jumlah ELSE -jumlah END) as saldo')
             ->groupBy(DB::raw('DATE(tanggal)'))
-            ->orderBy('tanggal');
+            ->orderBy(DB::raw('DATE(tanggal)'), 'asc');
 
         if (! $user) {
-            return $query->whereRaw('1 = 0');
+            return $query->whereRaw('1=0');
         }
 
         if ($user->hasRole('admin_pasar')) {
@@ -138,7 +157,7 @@ class MonthlyReport extends Page implements HasTable
                 $query->where('market_id', $this->filterMarketId);
             }
         } else {
-            return $query->whereRaw('1 = 0');
+            return $query->whereRaw('1=0');
         }
 
         $month = $this->filterMonth ?: Carbon::today()->format('Y-m');
@@ -154,41 +173,15 @@ class MonthlyReport extends Page implements HasTable
         return $query;
     }
 
-    protected function getTableColumns(): array
-    {
-        return [
-            Tables\Columns\TextColumn::make('tanggal')
-                ->label('Tanggal')
-                ->date('d M Y')
-                ->sortable(),
-            Tables\Columns\TextColumn::make('total_pemasukan')
-                ->label('Total Pemasukan')
-                ->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))
-                ->summarize(Sum::make()->label('Total Bulan')->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))),
-            Tables\Columns\TextColumn::make('total_pengeluaran')
-                ->label('Total Pengeluaran')
-                ->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))
-                ->summarize(Sum::make()->label('Total Bulan')->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))),
-            Tables\Columns\TextColumn::make('saldo')
-                ->label('Saldo')
-                ->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))
-                ->summarize(Sum::make()->label('Saldo Bulan')->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.'))),
-        ];
-    }
-
     protected function getTableEmptyStateHeading(): ?string
     {
-        return 'Belum ada transaksi pada bulan ini.';
-    }
-
-    protected function getTableHeaderActions(): array
-    {
-        return [];
-    }
-
-    protected function getTableBulkActions(): array
-    {
-        return [];
+        $month = $this->filterMonth ?: Carbon::today()->format('Y-m');
+        try {
+            $date = Carbon::createFromFormat('Y-m', $month);
+            return 'Belum ada transaksi pada ' . $date->translatedFormat('F Y');
+        } catch (\Exception) {
+            return 'Belum ada transaksi pada bulan ini.';
+        }
     }
 
     public function export(): StreamedResponse
@@ -196,7 +189,7 @@ class MonthlyReport extends Page implements HasTable
         $month = $this->filterMonth ?: Carbon::today()->format('Y-m');
         $filename = sprintf('laporan-bulanan-%s.csv', $month);
 
-        $records = $this->baseQuery()->get();
+        $records = $this->getTableQuery()->get();
 
         return response()->streamDownload(function () use ($records): void {
             $handle = fopen('php://output', 'w');

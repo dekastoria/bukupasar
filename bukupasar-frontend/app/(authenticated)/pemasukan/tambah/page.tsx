@@ -244,9 +244,9 @@ export default function TambahPemasukanPage() {
                         </SelectTrigger>
                         <SelectContent>
                           {tenants.length === 0 ? (
-                            <SelectItem value="" disabled>
+                            <div className="px-3 py-2 text-sm text-slate-500">
                               Tidak ada tenant tersedia
-                            </SelectItem>
+                            </div>
                           ) : (
                             tenants.map((tenant: Tenant) => (
                               <SelectItem key={tenant.id} value={String(tenant.id)}>

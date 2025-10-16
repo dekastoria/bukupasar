@@ -41,6 +41,8 @@ class PaymentController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $this->ensureCanCreate($request);
+
         $marketId = $request->user()->market_id;
 
         $data = $request->validate([
@@ -90,5 +92,14 @@ class PaymentController extends Controller
             'message' => 'Pembayaran berhasil dicatat.',
             'data' => $payment->load(['tenant', 'creator']),
         ], 201);
+    }
+
+    protected function ensureCanCreate(Request $request): void
+    {
+        abort_unless(
+            $request->user()->hasAnyRole(['admin_pusat', 'admin_pasar', 'inputer']),
+            403,
+            'Anda tidak memiliki akses.'
+        );
     }
 }

@@ -16,5 +16,5 @@ export const useCategories = (jenis: 'pemasukan' | 'pengeluaran') =>
       return response.data?.data ?? response.data ?? [];
     },
     staleTime: 10 * 60 * 1000,
-    enabled: typeof window !== 'undefined', // Only run on client-side
+    enabled: true, // Enable query to prevent hydration mismatch
   });

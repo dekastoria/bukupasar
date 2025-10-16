@@ -11,6 +11,8 @@ class Setting extends Model
 {
     use HasFactory;
 
+    protected const CACHE_MISS = '__SETTING_CACHE_MISS__';
+
     public $timestamps = false;
     public $incrementing = false;
 
@@ -26,6 +28,8 @@ class Setting extends Model
     protected $casts = [
         'updated_at' => 'datetime',
     ];
+
+    protected static array $localCache = [];
 
     public function market(): BelongsTo
     {
@@ -47,11 +51,27 @@ class Setting extends Model
 
     public static function getValue(int $marketId, string $key, mixed $default = null): mixed
     {
-        $setting = static::where('market_id', $marketId)
-            ->where('key_name', $key)
-            ->first();
+        $cacheKey = self::cacheKey($marketId, $key);
 
-        return $setting?->value ?? $default;
+        if (array_key_exists($cacheKey, self::$localCache)) {
+            return self::$localCache[$cacheKey] === self::CACHE_MISS
+                ? $default
+                : self::$localCache[$cacheKey];
+        }
+
+        $value = static::where('market_id', $marketId)
+            ->where('key_name', $key)
+            ->value('value');
+
+        if ($value === null) {
+            self::$localCache[$cacheKey] = self::CACHE_MISS;
+
+            return $default;
+        }
+
+        self::$localCache[$cacheKey] = $value;
+
+        return $value;
     }
 
     public static function setValue(int $marketId, string $key, mixed $value): void
@@ -60,5 +80,27 @@ class Setting extends Model
             ['market_id' => $marketId, 'key_name' => $key],
             ['value' => $value, 'updated_at' => now()]
         );
+
+        self::$localCache[self::cacheKey($marketId, $key)] = $value;
+    }
+
+    public static function clearCache(int $marketId, ?string $key = null): void
+    {
+        if ($key !== null) {
+            unset(self::$localCache[self::cacheKey($marketId, $key)]);
+
+            return;
+        }
+
+        foreach (array_keys(self::$localCache) as $cacheKey) {
+            if (str_starts_with($cacheKey, $marketId.'|')) {
+                unset(self::$localCache[$cacheKey]);
+            }
+        }
+    }
+
+    protected static function cacheKey(int $marketId, string $key): string
+    {
+        return $marketId.'|'.$key;
     }
 }

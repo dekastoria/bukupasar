@@ -43,6 +43,8 @@ class TransactionController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $this->ensureCanCreate($request);
+
         $marketId = $request->user()->market_id;
 
         $data = $request->validate($this->rules($marketId));
@@ -178,6 +180,15 @@ class TransactionController extends Controller
                 'Tenant wajib dipilih untuk transaksi sewa.'
             );
         }
+    }
+
+    protected function ensureCanCreate(Request $request): void
+    {
+        abort_unless(
+            $request->user()->hasAnyRole(['admin_pusat', 'admin_pasar', 'inputer']),
+            403,
+            'Anda tidak memiliki akses.'
+        );
     }
 
     protected function authorizeTransaction(Request $request, Transaction $transaction): void

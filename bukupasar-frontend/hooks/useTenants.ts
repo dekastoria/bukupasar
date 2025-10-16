@@ -13,5 +13,5 @@ export const useTenants = () =>
       return response.data?.data ?? response.data ?? [];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    enabled: typeof window !== 'undefined',
+    enabled: true,
   });

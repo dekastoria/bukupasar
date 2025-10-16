@@ -59,14 +59,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const clearSession = useCallback(() => {
-    if (typeof window !== 'undefined') {
+    if (mounted) {
       localStorage.removeItem(TOKEN_STORAGE_KEY);
     }
     setAuthToken(null);
     setUser(null);
-  }, []);
+  }, [mounted]);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -87,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [clearSession]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (!mounted) {
       return;
     }
 
@@ -100,10 +105,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setAuthToken(token);
     refreshUser();
-  }, [refreshUser]);
+  }, [refreshUser, mounted]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (!mounted) {
       return;
     }
 
@@ -125,7 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       window.removeEventListener('storage', handleStorage);
     };
-  }, [clearSession, refreshUser]);
+  }, [clearSession, refreshUser, mounted]);
 
   const login = useCallback(
     async (identifier: string, password: string, marketId: number) => {
@@ -143,7 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           throw new Error('Token tidak ditemukan pada respons.');
         }
 
-        if (typeof window !== 'undefined') {
+        if (mounted) {
           localStorage.setItem(TOKEN_STORAGE_KEY, token);
         }
 

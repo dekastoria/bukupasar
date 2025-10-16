@@ -29,6 +29,8 @@ class TenantController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $this->ensureAdmin($request);
+
         $marketId = $request->user()->market_id;
 
         $data = $request->validate([
@@ -69,6 +71,7 @@ class TenantController extends Controller
 
     public function update(Request $request, Tenant $tenant): JsonResponse
     {
+        $this->ensureAdmin($request);
         $this->authorizeTenant($request, $tenant);
 
         $marketId = $request->user()->market_id;
@@ -101,6 +104,7 @@ class TenantController extends Controller
 
     public function destroy(Request $request, Tenant $tenant): JsonResponse
     {
+        $this->ensureAdmin($request);
         $this->authorizeTenant($request, $tenant);
 
         $tenant->delete();
@@ -127,5 +131,14 @@ class TenantController extends Controller
     protected function authorizeTenant(Request $request, Tenant $tenant): void
     {
         abort_unless($tenant->market_id === $request->user()->market_id, 404);
+    }
+
+    protected function ensureAdmin(Request $request): void
+    {
+        abort_unless(
+            $request->user()->hasAnyRole(['admin_pusat', 'admin_pasar']),
+            403,
+            'Anda tidak memiliki akses.'
+        );
     }
 }

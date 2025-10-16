@@ -15,5 +15,5 @@ export const useSearchTenants = (query: string) =>
       return response.data?.data ?? response.data ?? [];
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
-    enabled: typeof window !== 'undefined' && query.length >= 2,
+    enabled: query.length >= 2,
   });
