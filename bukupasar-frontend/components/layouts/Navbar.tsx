@@ -22,8 +22,8 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white shadow-2xl">
-      <ul className="mx-auto flex h-20 w-full max-w-5xl items-center justify-between px-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white shadow-lg">
+      <ul className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-2">
         {navItems.map(({ href, label, icon: Icon }) => {
           const isActive = pathname.startsWith(href);
 
@@ -31,11 +31,11 @@ export default function Navbar() {
             <li key={href} className="flex-1">
               <Link
                 href={href}
-                className={`flex flex-col items-center justify-center gap-1 rounded-lg py-2 text-base transition-colors duration-150 ${
-                  isActive ? 'text-sky-600 font-semibold' : 'text-slate-500'
+                className={`flex flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 text-xs transition-colors duration-150 ${
+                  isActive ? 'text-emerald-600 font-semibold' : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
-                <Icon className={`h-6 w-6 ${isActive ? 'scale-110' : ''}`} aria-hidden />
+                <Icon className={`h-4 w-4 ${isActive ? 'scale-110' : ''}`} aria-hidden />
                 <span>{label}</span>
               </Link>
             </li>

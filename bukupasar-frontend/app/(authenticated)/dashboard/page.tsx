@@ -45,51 +45,56 @@ export default function DashboardPage() {
   const saldo = data?.saldo ?? pemasukan - pengeluaran;
 
   return (
-    <section className="space-y-6">
-      <header className="space-y-2">
-        <h2 className="text-3xl font-semibold text-slate-800">Dashboard</h2>
-        <p className="text-lg text-slate-600">
-          Selamat datang kembali{user ? `, ${user.name}` : ''}! Gunakan ringkasan di bawah sebagai panduan cepat.
+    <section className="space-y-4">
+      <header className="space-y-1">
+        <h2 className="text-xl font-semibold text-slate-800">Dashboard</h2>
+        <p className="text-sm text-slate-600">
+          Selamat datang kembali{user ? `, ${user.name}` : ''}!
         </p>
       </header>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-3">
         <SummaryCard
           title="Pemasukan Hari Ini"
-          icon={<TrendingUp className="h-6 w-6 text-green-600" />}
+          icon={<TrendingUp className="h-4 w-4 text-emerald-600" />}
           value={formatCurrency(pemasukan)}
-          description="Total pemasukan yang tercatat hari ini"
+          description="Total pemasukan hari ini"
           loading={isLoading}
           error={isError}
+          iconBg="bg-emerald-100"
         />
 
         <SummaryCard
           title="Pengeluaran Hari Ini"
-          icon={<TrendingDown className="h-6 w-6 text-red-600" />}
+          icon={<TrendingDown className="h-4 w-4 text-red-600" />}
           value={formatCurrency(pengeluaran)}
-          description="Total pengeluaran yang tercatat hari ini"
+          description="Total pengeluaran hari ini"
           loading={isLoading}
           error={isError}
+          iconBg="bg-red-100"
         />
 
         <SummaryCard
           title="Saldo Hari Ini"
-          icon={<PiggyBank className={`h-6 w-6 ${saldo >= 0 ? 'text-blue-600' : 'text-red-600'}`} />}
+          icon={<PiggyBank className={`h-4 w-4 ${saldo >= 0 ? 'text-emerald-600' : 'text-red-600'}`} />}
           value={formatCurrency(saldo)}
           description="Selisih pemasukan dan pengeluaran"
           loading={isLoading}
           error={isError}
+          iconBg={saldo >= 0 ? 'bg-emerald-100' : 'bg-red-100'}
         />
       </div>
 
-      <Card className="border-slate-200 bg-white">
+      <Card className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl text-slate-800">
-            <BarChart3 className="h-6 w-6 text-sky-600" />
+          <CardTitle className="flex items-center gap-2 text-lg text-slate-800">
+            <div className="rounded-full bg-emerald-100 p-2">
+              <BarChart3 className="h-4 w-4 text-emerald-600" />
+            </div>
             Aktivitas Singkat
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-lg text-slate-600">
+        <CardContent className="space-y-2 text-sm text-slate-600">
           <p>
             Gunakan menu di bawah untuk menambah pemasukan, pengeluaran, pembayaran sewa, atau melihat laporan.
           </p>
@@ -109,24 +114,27 @@ interface SummaryCardProps {
   description: string;
   loading?: boolean;
   error?: boolean;
+  iconBg?: string;
 }
 
-function SummaryCard({ title, icon, value, description, loading, error }: SummaryCardProps) {
+function SummaryCard({ title, icon, value, description, loading, error, iconBg = 'bg-slate-100' }: SummaryCardProps) {
   return (
-    <Card className="border-slate-200 bg-white shadow-sm">
-      <CardHeader className="flex flex-row items-center justify-between gap-3 pb-0">
-        <CardTitle className="text-lg text-slate-600">{title}</CardTitle>
-        {icon}
+    <Card className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+      <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
+        <CardTitle className="text-sm font-medium text-slate-600">{title}</CardTitle>
+        <div className={`rounded-full p-2 ${iconBg}`}>
+          {icon}
+        </div>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent className="pt-2">
         {loading ? (
-          <div className="h-10 w-3/4 animate-pulse rounded bg-slate-200" />
+          <div className="h-8 w-3/4 animate-pulse rounded bg-slate-200" />
         ) : error ? (
-          <p className="text-base text-red-600">Tidak dapat memuat data.</p>
+          <p className="text-xs text-red-600">Tidak dapat memuat data.</p>
         ) : (
-          <p className="text-3xl font-semibold text-slate-800">{value}</p>
+          <p className="text-2xl font-bold text-slate-800">{value}</p>
         )}
-        <p className="mt-2 text-sm text-slate-500">{description}</p>
+        <p className="mt-1 text-xs text-slate-500">{description}</p>
       </CardContent>
     </Card>
   );
