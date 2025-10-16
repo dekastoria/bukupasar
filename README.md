@@ -100,6 +100,39 @@ Bukupasar adalah sistem web untuk mengelola keuangan pasar tradisional dengan fi
 
 ---
 
+### 🔐 Security & Best Practices
+
+**⚠️ WAJIB BACA sebelum menggunakan AI lain untuk modifikasi code:**
+
+1. **[AI-GUIDELINES.md](AI-GUIDELINES.md)** 🛡️ (10 min)
+   - Critical files yang TIDAK BOLEH diubah
+   - Files yang aman untuk UI changes
+   - Template request untuk AI yang aman
+   - Testing protocol setelah perubahan
+   - Git workflow untuk safe changes
+   - UX guidelines yang harus dijaga
+
+2. **[AI-SAFE-CHANGE-EXAMPLE.md](AI-SAFE-CHANGE-EXAMPLE.md)** 📝 (8 min)
+   - Step-by-step contoh mengubah warna theme
+   - Git backup & branch strategy
+   - Cara memberikan prompt spesifik
+   - Testing checklist lengkap
+   - Rollback procedure jika code rusak
+
+3. **[GIT-SECURITY-AUDIT.md](GIT-SECURITY-AUDIT.md)** 🔍 (5 min)
+   - Hasil audit keamanan git repository
+   - Verifikasi .env tidak ter-commit
+   - Security checklist
+   - What to do jika accidentally commit secrets
+
+**Why These Matter:**
+- Aplikasi ini dibangun full dengan AI
+- Saat pakai AI model lain (misal hanya ubah UI), ada risiko merusak code existing
+- File AI-GUIDELINES.md adalah **panduan wajib** untuk semua AI
+- Melindungi critical files (AuthContext, api.ts, Models, Migrations, dll)
+
+---
+
 ## 🤖 Working with AI
 
 **Every AI Session, Start With:**
@@ -111,6 +144,7 @@ Please load these files untuk context:
 1. 01-PROJECT-SPEC.md - Architecture & database
 2. 02-BACKEND-GUIDE.md (or 03 for frontend) - Implementation guide
 3. 05-AI-ASSISTANT-GUIDE.md - Workflow & prompts
+4. AI-GUIDELINES.md - Safety guidelines (WAJIB untuk code changes) 🛡️
 
 Current progress: lihat TO-DO-LIST.md → [Week X]
 
@@ -127,6 +161,36 @@ Ready?"
 - Build Transaction API → Use "Generate API Controller" template
 - Create Filament resource → Use "Generate Filament Resource" template
 - Build Next.js form → Use "Generate Next.js Page" template
+
+**🛡️ For UI Changes or Working with Multiple AI:**
+
+**IMPORTANT:** Jika hanya ingin ubah UI atau pakai AI model lain, gunakan workflow ini:
+
+```
+"Context: Bukupasar project (baca AI-GUIDELINES.md WAJIB)
+
+Task: [specific UI change, contoh: ubah warna button]
+
+Files to change:
+- [exact file path, contoh: app/dashboard/page.tsx]
+
+Files to PROTECT:
+- AuthContext.tsx, api.ts, all backend files, etc (lihat AI-GUIDELINES.md)
+
+Change details: [spesifik perubahan]
+
+Show DIFF first, wait for approval."
+```
+
+**Always:**
+1. ✅ Git commit working state dulu
+2. ✅ Create new branch
+3. ✅ Specify exact files to change
+4. ✅ Request diff preview first
+5. ✅ Test after changes
+6. ✅ Commit if OK, rollback if broken
+
+**Reference:** See [AI-SAFE-CHANGE-EXAMPLE.md](AI-SAFE-CHANGE-EXAMPLE.md) untuk step-by-step praktis.
 
 ---
 
@@ -169,13 +233,18 @@ Each task has:
 ## 📂 Project Structure
 
 ```
-D:\belajar-website\pasar\
+C:\laragon\www\bukupasar\
 ├── 01-PROJECT-SPEC.md          # Architecture & database (1200 lines)
 ├── 02-BACKEND-GUIDE.md         # Laravel implementation (1000 lines)
 ├── 03-FRONTEND-GUIDE.md        # Next.js implementation (800 lines)
 ├── 04-DEPLOYMENT-OPS.md        # Deployment & ops (600 lines)
 ├── 05-AI-ASSISTANT-GUIDE.md    # AI prompts & workflow (800 lines) ⭐
+├── AI-GUIDELINES.md            # 🛡️ Safety guidelines (wajib untuk AI) ⭐⭐⭐
+├── AI-SAFE-CHANGE-EXAMPLE.md   # Step-by-step contoh safe changes
+├── GIT-SECURITY-AUDIT.md       # Git security audit results
 ├── TO-DO-LIST.md               # Progress tracker (updated daily)
+├── LOGIN-CREDENTIALS.md        # 🔐 Test credentials (change for production)
+├── START-DEV-SERVERS.md        # 🚀 Quick start guide
 ├── README.md                   # This file (navigation)
 │
 ├── archive/                    # Backup of original files
@@ -184,8 +253,8 @@ D:\belajar-website\pasar\
 │   ├── idea-1.md              # Brainstorming document
 │   └── idea-2.md              # Additional ideas
 │
-├── bukupasar-backend/          # Laravel project (to be created)
-└── bukupasar-frontend/         # Next.js project (to be created)
+├── bukupasar-backend/          # Laravel project ✅
+└── bukupasar-frontend/         # Next.js project ✅
 ```
 
 ---
@@ -312,4 +381,4 @@ Good luck! 🚀
 
 ---
 
-**Last Updated:** 2025-01-15
+**Last Updated:** 2025-01-16
