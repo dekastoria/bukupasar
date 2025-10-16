@@ -151,12 +151,12 @@ export default function SewaPage() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => router.push('/')}
-              className="h-12 w-12"
+              onClick={() => router.push('/dashboard')}
+              className="h-9 w-9"
             >
-              <ArrowLeft className="h-6 w-6" />
+              <ArrowLeft className="h-4 w-4" />
             </Button>
-            <h1 className="text-sm md:text-base font-bold text-slate-900">
+            <h1 className="text-lg font-semibold text-slate-900">
               Pembayaran Sewa
             </h1>
           </div>
@@ -168,7 +168,7 @@ export default function SewaPage() {
         {/* Tenant Search */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Pilih Penyewa</CardTitle>
+            <CardTitle className="text-lg">Pilih Penyewa</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <TenantSearch
@@ -176,7 +176,7 @@ export default function SewaPage() {
               selectedTenant={selectedTenant}
             />
             {errors.tenant && (
-              <p className="text-red-600 text-base">{errors.tenant}</p>
+              <p className="text-red-600 text-sm">{errors.tenant}</p>
             )}
 
             {selectedTenant && (
@@ -191,7 +191,7 @@ export default function SewaPage() {
                     )}`,
                   });
                 }}
-                className="h-12 text-sm"
+                className="h-9 text-sm"
               >
                 Cek Tunggakan
               </Button>
@@ -220,7 +220,7 @@ export default function SewaPage() {
                       {selectedTenant.nomor_lapak} - {selectedTenant.nama}
                     </p>
                     <p className={cn(
-                      "text-base font-bold",
+                      "text-sm font-bold",
                       selectedTenant.outstanding > 0 ? "text-red-700" : "text-green-700"
                     )}>
                       Tunggakan: {formatCurrency(selectedTenant.outstanding)}
@@ -246,7 +246,7 @@ export default function SewaPage() {
             <CardContent className="space-y-6">
               {/* Jumlah */}
               <div className="space-y-2">
-                <Label htmlFor="jumlah" className="text-base font-medium flex items-center gap-2">
+                <Label htmlFor="jumlah" className="text-sm font-medium flex items-center gap-2">
                   <DollarSign className="h-5 w-5" />
                   Jumlah Bayar
                 </Label>
@@ -268,7 +268,7 @@ export default function SewaPage() {
                   />
                 </div>
                 {errors.jumlah && (
-                  <p className="text-red-600 text-base">{errors.jumlah}</p>
+                  <p className="text-red-600 text-sm">{errors.jumlah}</p>
                 )}
                 {selectedTenant.outstanding > 0 && jumlah && (
                   <p className="text-sm text-slate-600">
@@ -284,7 +284,7 @@ export default function SewaPage() {
 
               {/* Tanggal */}
               <div className="space-y-2">
-                <Label htmlFor="tanggal" className="text-base font-medium flex items-center gap-2">
+                <Label htmlFor="tanggal" className="text-sm font-medium flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
                   Tanggal Bayar
                 </Label>
@@ -299,13 +299,13 @@ export default function SewaPage() {
                   )}
                 />
                 {errors.tanggal && (
-                  <p className="text-red-600 text-base">{errors.tanggal}</p>
+                  <p className="text-red-600 text-sm">{errors.tanggal}</p>
                 )}
               </div>
 
               {/* Catatan */}
               <div className="space-y-2">
-                <Label htmlFor="catatan" className="text-base font-medium flex items-center gap-2">
+                <Label htmlFor="catatan" className="text-sm font-medium flex items-center gap-2">
                   <FileText className="h-5 w-5" />
                   Catatan (Opsional)
                 </Label>
