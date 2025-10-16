@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\RentalTypeController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\TransactionController;
@@ -27,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{jenis}', [CategoryController::class, 'byJenis'])
         ->whereIn('jenis', ['pemasukan', 'pengeluaran']);
+
+    Route::get('/rental-types', [RentalTypeController::class, 'index']);
 
     Route::get('/tenants/search/{query}', [TenantController::class, 'search']);
     Route::apiResource('tenants', TenantController::class);

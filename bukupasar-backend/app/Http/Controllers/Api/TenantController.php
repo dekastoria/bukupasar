@@ -14,7 +14,7 @@ class TenantController extends Controller
     {
         $marketId = $request->user()->market_id;
 
-        $query = Tenant::forMarket($marketId)->orderByDesc('created_at');
+        $query = Tenant::forMarket($marketId)->with('rentalType')->orderByDesc('created_at');
 
         if ($request->filled('q')) {
             $query->search($request->string('q'));
@@ -41,6 +41,9 @@ class TenantController extends Controller
                 'max:50',
                 Rule::unique('tenants', 'nomor_lapak')->where('market_id', $marketId),
             ],
+            'rental_type_id' => ['nullable', 'integer', 'exists:rental_types,id'],
+            'rental_period_start' => ['nullable', 'date'],
+            'rental_period_end' => ['nullable', 'date', 'after:rental_period_start'],
             'hp' => ['nullable', 'string', 'max:30'],
             'alamat' => ['nullable', 'string'],
             'foto_profile' => ['nullable', 'string', 'max:255'],
@@ -63,6 +66,8 @@ class TenantController extends Controller
     public function show(Request $request, Tenant $tenant): JsonResponse
     {
         $this->authorizeTenant($request, $tenant);
+
+        $tenant->load('rentalType');
 
         return response()->json([
             'data' => $tenant,
@@ -87,6 +92,9 @@ class TenantController extends Controller
                     ->where('market_id', $marketId)
                     ->ignore($tenant->id),
             ],
+            'rental_type_id' => ['nullable', 'integer', 'exists:rental_types,id'],
+            'rental_period_start' => ['nullable', 'date'],
+            'rental_period_end' => ['nullable', 'date', 'after:rental_period_start'],
             'hp' => ['nullable', 'string', 'max:30'],
             'alamat' => ['nullable', 'string'],
             'foto_profile' => ['nullable', 'string', 'max:255'],
