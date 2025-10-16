@@ -37,6 +37,9 @@ class AuthController extends Controller
             ], 401);
         }
 
+        // Update last login
+        $user->update(['last_login_at' => now()]);
+
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
@@ -48,6 +51,9 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'username' => $user->username,
                     'email' => $user->email,
+                    'phone' => $user->phone,
+                    'foto_profile' => $user->foto_profile,
+                    'last_login_at' => $user->last_login_at?->toISOString(),
                     'market_id' => $user->market_id,
                     'role' => $user->getRoleNames()->first(),
                 ],
@@ -74,7 +80,11 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'username' => $user->username,
                 'email' => $user->email,
+                'phone' => $user->phone,
+                'foto_profile' => $user->foto_profile,
+                'last_login_at' => $user->last_login_at?->toISOString(),
                 'market_id' => $user->market_id,
+                'market_name' => $user->market?->nama,
                 'role' => $user->getRoleNames()->first(),
                 'roles' => $user->getRoleNames(),
             ],
