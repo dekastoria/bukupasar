@@ -28,8 +28,8 @@ export default function AuthenticatedLayout({
 
   if (isLoading || (!isClient)) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100 text-slate-700">
-        <div className="text-xl font-medium">Memuat data akun…</div>
+      <div className="flex min-h-screen items-center justify-center bg-slate-100 text-slate-600">
+        <div className="text-sm">Memuat...</div>
       </div>
     );
   }
