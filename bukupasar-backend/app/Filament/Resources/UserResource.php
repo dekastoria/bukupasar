@@ -8,6 +8,7 @@ use App\Models\Market;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -131,6 +132,19 @@ class UserResource extends Resource
                     ->maxLength(30)
                     ->nullable(),
 
+                FileUpload::make('foto_profile')
+                    ->label('Foto Profile')
+                    ->image()
+                    ->directory('profile-photos')
+                    ->disk('public')
+                    ->nullable()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '1:1',
+                    ])
+                    ->maxSize(2048)
+                    ->columnSpanFull(),
+
                 TextInput::make('password')
                     ->label('Password')
                     ->password()
@@ -149,18 +163,20 @@ class UserResource extends Resource
                     ->required(fn (string $operation) => $operation === 'create')
                     ->dehydrated(false),
 
-                Select::make('roles')
+                Select::make('role')
                     ->label('Role')
-                    ->relationship(
-                        name: 'roles',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query) => $query->whereIn('name', static::assignableRoleNames())
+                    ->options(fn () => collect(static::assignableRoleNames())
+                        ->mapWithKeys(fn ($role) => [$role => static::formatRoleLabel($role)])
                     )
                     ->required()
-                    ->preload()
                     ->native(false)
                     ->searchable()
-                    ->getOptionLabelFromRecordUsing(fn (Role $role) => static::formatRoleLabel($role->name)),
+                    ->afterStateHydrated(function (Select $component, ?User $record) {
+                        if ($record) {
+                            $component->state($record->getRoleNames()->first());
+                        }
+                    })
+                    ->dehydrated(false),
             ])
             ->columns(2);
     }
