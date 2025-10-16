@@ -6,14 +6,19 @@ import { User, Mail, Phone, Building2, Shield, Clock, Camera, ArrowLeft, LogOut 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PhotoCropModal } from '@/components/profile/PhotoCropModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale';
+import api from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   if (!user) {
     return null;
@@ -28,17 +33,58 @@ export default function ProfilePage() {
       .slice(0, 2);
   };
 
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // TODO: Implement photo upload
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('File harus berupa gambar');
+      return;
+    }
+
+    // Validate file size (2MB max)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Ukuran file maksimal 2MB');
+      return;
+    }
+
+    // Read file and show crop modal
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSelectedImage(reader.result as string);
+      setCropModalOpen(true);
+    };
+    reader.readAsDataURL(file);
+
+    // Reset input
+    e.target.value = '';
+  };
+
+  const handleCropComplete = async (croppedImageBlob: Blob) => {
     setIsUploading(true);
+    
     try {
-      // Upload logic will be implemented
-      console.log('Uploading:', file);
+      const formData = new FormData();
+      formData.append('photo', croppedImageBlob, 'profile.jpg');
+
+      await api.post('/profile/upload-photo', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      toast.success('Foto profile berhasil diupload!');
+      
+      // Refresh user data to get new photo URL
+      await refreshUser();
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      const message = error?.response?.data?.message || 'Gagal upload foto';
+      toast.error(message);
     } finally {
       setIsUploading(false);
+      setSelectedImage(null);
     }
   };
 
@@ -111,7 +157,7 @@ export default function ProfilePage() {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={handlePhotoUpload}
+                  onChange={handlePhotoSelect}
                   disabled={isUploading}
                 />
               </label>
@@ -199,6 +245,19 @@ export default function ProfilePage() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Crop Modal */}
+      {selectedImage && (
+        <PhotoCropModal
+          isOpen={cropModalOpen}
+          onClose={() => {
+            setCropModalOpen(false);
+            setSelectedImage(null);
+          }}
+          imageSrc={selectedImage}
+          onCropComplete={handleCropComplete}
+        />
+      )}
     </div>
   );
 }

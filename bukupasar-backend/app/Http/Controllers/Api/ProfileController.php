@@ -21,7 +21,7 @@ class ProfileController extends Controller
                 'username' => $user->username,
                 'email' => $user->email,
                 'phone' => $user->phone,
-                'foto_profile' => $user->foto_profile,
+                'foto_profile' => $user->foto_profile ? url('storage/' . $user->foto_profile) : null,
                 'last_login_at' => $user->last_login_at?->toISOString(),
                 'market_id' => $user->market_id,
                 'market_name' => $user->market?->nama,
@@ -57,7 +57,7 @@ class ProfileController extends Controller
                 'username' => $user->username,
                 'email' => $user->email,
                 'phone' => $user->phone,
-                'foto_profile' => $user->foto_profile,
+                'foto_profile' => $user->foto_profile ? url('storage/' . $user->foto_profile) : null,
             ],
         ]);
     }
