@@ -44,26 +44,25 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center px-4 py-10">
-      <div className="mb-8 text-center">
-        <p className="text-sm uppercase tracking-[0.2em] text-slate-500">Selamat Datang di</p>
-        <h1 className="text-3xl font-semibold text-slate-800 mt-2">Bukupasar</h1>
-        <p className="text-base text-slate-600 mt-2 max-w-md">
-          Aplikasi pencatatan keuangan pasar tradisional dengan tampilan besar dan mudah dibaca.
+      <div className="mb-6 text-center">
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Selamat Datang di</p>
+        <h1 className="text-xl font-semibold text-slate-800 mt-1">Bukupasar</h1>
+        <p className="text-sm text-slate-600 mt-1 max-w-md">
+          Aplikasi pencatatan keuangan pasar tradisional
         </p>
       </div>
 
-      <Card className="w-full max-w-xl shadow-lg">
-        <CardHeader className="pb-4 text-center sm:text-left">
-          <CardTitle className="text-2xl sm:text-3xl text-slate-800">Masuk ke Akun Anda</CardTitle>
-          <CardDescription className="text-base sm:text-lg text-slate-600">
-            Gunakan email (atau username), password, dan ID pasar yang telah diberikan admin
-            pasar.
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="pb-3 text-center sm:text-left">
+          <CardTitle className="text-lg text-slate-800">Masuk ke Akun Anda</CardTitle>
+          <CardDescription className="text-sm text-slate-600">
+            Masukkan username, password, dan ID pasar
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="identifier" className="text-lg text-slate-700">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <Label htmlFor="identifier" className="text-sm text-slate-700">
                 Email atau Username
               </Label>
               <Input
@@ -73,13 +72,13 @@ export default function LoginPage() {
                 autoComplete="username"
                 onChange={(event) => setIdentifier(event.target.value)}
                 required
-                className="h-14 text-xl bg-white"
-                placeholder="contoh: admin@example.com"
+                className="h-9 text-sm bg-white"
+                placeholder="contoh: inputer"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-lg text-slate-700">
+            <div className="space-y-1">
+              <Label htmlFor="password" className="text-sm text-slate-700">
                 Password
               </Label>
               <div className="relative">
@@ -90,22 +89,22 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   onChange={(event) => setPassword(event.target.value)}
                   required
-                  className="h-14 text-xl bg-white pr-14"
+                  className="h-9 text-sm bg-white pr-10"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                   aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                 >
-                  {showPassword ? <EyeOff className="h-6 w-6" /> : <Eye className="h-6 w-6" />}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="market" className="text-lg text-slate-700">
+            <div className="space-y-1">
+              <Label htmlFor="market" className="text-sm text-slate-700">
                 ID Pasar
               </Label>
               <Input
@@ -116,17 +115,17 @@ export default function LoginPage() {
                 value={marketId}
                 onChange={(event) => setMarketId(event.target.value)}
                 required
-                className="h-14 text-xl bg-white"
-                placeholder="Masukkan ID pasar"
+                className="h-9 text-sm bg-white"
+                placeholder="Contoh: 1"
               />
-              <p className="text-sm text-slate-500">
-                Hubungi admin pasar Anda jika belum mengetahui ID pasar.
+              <p className="text-xs text-slate-500">
+                Hubungi admin jika belum tahu ID pasar
               </p>
             </div>
 
             <Button
               type="submit"
-              className="w-full h-14 text-xl font-semibold"
+              className="w-full h-9 text-sm font-semibold bg-emerald-600 hover:bg-emerald-700"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Memproses…' : 'Masuk'}
