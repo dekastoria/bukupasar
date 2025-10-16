@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -36,8 +36,8 @@ export default function LaporanLayout({
               className={cn(
                 'rounded-xl border px-4 py-3 text-center text-base font-semibold transition-all duration-150',
                 active
-                  ? 'border-sky-500 bg-sky-50 text-sky-700 shadow'
-                  : 'border-slate-200 bg-white text-slate-500 hover:border-sky-200 hover:text-sky-600'
+                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow'
+                  : 'border-slate-200 bg-white text-slate-500 hover:border-emerald-200 hover:text-emerald-600'
               )}
             >
               {tab.label}

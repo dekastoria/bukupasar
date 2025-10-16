@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -102,8 +102,8 @@ export default function TambahPengeluaranPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h2 className="text-3xl font-semibold text-slate-800">Tambah Pengeluaran</h2>
-        <p className="text-lg text-slate-600">
+        <h2 className="text-base font-semibold text-slate-800">Tambah Pengeluaran</h2>
+        <p className="text-sm text-slate-600">
           Ikuti langkah-langkah berikut untuk mencatat pengeluaran baru.
         </p>
       </header>
@@ -113,7 +113,7 @@ export default function TambahPengeluaranPage() {
         {[1, 2, 3].map((num) => (
           <div key={num} className="flex items-center gap-2">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-full text-lg font-semibold ${
+              className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
                 step >= num
                   ? 'bg-red-600 text-white'
                   : 'bg-slate-200 text-slate-500'
@@ -123,7 +123,7 @@ export default function TambahPengeluaranPage() {
             </div>
             {num < 3 && (
               <div
-                className={`h-1 w-12 ${step > num ? 'bg-red-600' : 'bg-slate-200'}`}
+                className={`h-0.5 w-10 ${step > num ? 'bg-red-600' : 'bg-slate-200'}`}
               />
             )}
           </div>
@@ -134,15 +134,15 @@ export default function TambahPengeluaranPage() {
       {step === 1 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-slate-800">
+            <CardTitle className="text-sm text-slate-800">
               Langkah 1: Pilih Kategori Pengeluaran
             </CardTitle>
           </CardHeader>
           <CardContent>
             {loadingCategories ? (
-              <p className="text-lg text-slate-600">Memuat kategori...</p>
+              <p className="text-sm text-slate-600">Memuat kategori...</p>
             ) : categories.length === 0 ? (
-              <p className="text-lg text-red-600">
+              <p className="text-sm text-red-600">
                 Tidak ada kategori tersedia. Hubungi admin pasar.
               </p>
             ) : (
@@ -152,7 +152,7 @@ export default function TambahPengeluaranPage() {
                     key={cat.id}
                     type="button"
                     onClick={() => handleCategorySelect(cat.nama)}
-                    className="h-20 text-xl font-semibold"
+                    className="h-12 text-base font-semibold"
                     variant="outline"
                   >
                     {cat.nama}
@@ -168,19 +168,19 @@ export default function TambahPengeluaranPage() {
       {step === 2 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-slate-800">
+            <CardTitle className="text-sm text-slate-800">
               Langkah 2: Isi Detail Transaksi
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="rounded-lg bg-slate-100 p-4">
-              <p className="text-lg text-slate-600">
+              <p className="text-sm text-slate-600">
                 Kategori: <span className="font-semibold text-slate-800">{formData.kategori}</span>
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nominal" className="text-lg text-slate-700">
+              <Label htmlFor="nominal" className="text-sm text-slate-700">
                 Nominal (Rp) <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -191,13 +191,13 @@ export default function TambahPengeluaranPage() {
                 value={formData.nominal}
                 onChange={(e) => handleFormChange('nominal', e.target.value)}
                 placeholder="Contoh: 50000"
-                className="h-14 text-xl"
+                className="h-9 text-xl"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tanggal" className="text-lg text-slate-700">
+              <Label htmlFor="tanggal" className="text-sm text-slate-700">
                 Tanggal <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -205,13 +205,13 @@ export default function TambahPengeluaranPage() {
                 type="date"
                 value={formData.tanggal}
                 onChange={(e) => handleFormChange('tanggal', e.target.value)}
-                className="h-14 text-xl"
+                className="h-9 text-xl"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="catatan" className="text-lg text-slate-700">
+              <Label htmlFor="catatan" className="text-sm text-slate-700">
                 Catatan {requiresCatatan && <span className="text-red-600">*</span>}
               </Label>
               <Input
@@ -220,7 +220,7 @@ export default function TambahPengeluaranPage() {
                 value={formData.catatan}
                 onChange={(e) => handleFormChange('catatan', e.target.value)}
                 placeholder="Keterangan tambahan..."
-                className="h-14 text-xl"
+                className="h-9 text-xl"
                 required={requiresCatatan}
               />
               {requiresCatatan && (
@@ -235,7 +235,7 @@ export default function TambahPengeluaranPage() {
                 type="button"
                 onClick={() => setStep(1)}
                 variant="outline"
-                className="h-14 flex-1 text-lg"
+                className="h-9 flex-1 text-sm"
               >
                 <ArrowLeft className="mr-2 h-5 w-5" />
                 Kembali
@@ -243,7 +243,7 @@ export default function TambahPengeluaranPage() {
               <Button
                 type="button"
                 onClick={handleNext}
-                className="h-14 flex-1 text-lg"
+                className="h-9 flex-1 text-sm"
               >
                 Lanjutkan
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -257,7 +257,7 @@ export default function TambahPengeluaranPage() {
       {step === 3 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-slate-800">
+            <CardTitle className="text-sm text-slate-800">
               Langkah 3: Review Transaksi
             </CardTitle>
           </CardHeader>
@@ -266,24 +266,24 @@ export default function TambahPengeluaranPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-base text-slate-600">Jenis</p>
-                  <p className="text-xl font-semibold text-slate-800">Pengeluaran</p>
+                  <p className="text-base font-semibold text-slate-800">Pengeluaran</p>
                 </div>
                 <div>
                   <p className="text-base text-slate-600">Kategori</p>
-                  <p className="text-xl font-semibold text-slate-800">{formData.kategori}</p>
+                  <p className="text-base font-semibold text-slate-800">{formData.kategori}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-base text-slate-600">Nominal</p>
-                  <p className="text-2xl font-bold text-red-600">
+                  <p className="text-sm font-bold text-red-600">
                     {formatCurrency(Number(formData.nominal))}
                   </p>
                 </div>
                 <div>
                   <p className="text-base text-slate-600">Tanggal</p>
-                  <p className="text-xl font-semibold text-slate-800">
+                  <p className="text-base font-semibold text-slate-800">
                     {new Date(formData.tanggal).toLocaleDateString('id-ID', {
                       day: 'numeric',
                       month: 'long',
@@ -296,7 +296,7 @@ export default function TambahPengeluaranPage() {
               {formData.catatan && (
                 <div>
                   <p className="text-base text-slate-600">Catatan</p>
-                  <p className="text-lg text-slate-800">{formData.catatan}</p>
+                  <p className="text-sm text-slate-800">{formData.catatan}</p>
                 </div>
               )}
             </div>
@@ -310,7 +310,7 @@ export default function TambahPengeluaranPage() {
                 type="button"
                 onClick={() => setStep(2)}
                 variant="outline"
-                className="h-14 flex-1 text-lg"
+                className="h-9 flex-1 text-sm"
                 disabled={submitting}
               >
                 <ArrowLeft className="mr-2 h-5 w-5" />
@@ -319,7 +319,7 @@ export default function TambahPengeluaranPage() {
               <Button
                 type="button"
                 onClick={handleSubmit}
-                className="h-14 flex-1 text-lg bg-red-600 hover:bg-red-700"
+                className="h-9 flex-1 text-sm bg-red-600 hover:bg-red-700"
                 disabled={submitting}
               >
                 {submitting ? (

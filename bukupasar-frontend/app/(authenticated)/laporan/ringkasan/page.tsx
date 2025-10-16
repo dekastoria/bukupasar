@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 
@@ -70,7 +70,7 @@ export default function LaporanRingkasanPage() {
     <Card>
       <CardHeader>
         <div className="flex flex-col gap-4">
-          <CardTitle className="text-2xl text-slate-800">Laporan Ringkasan</CardTitle>
+          <CardTitle className="text-sm text-slate-800">Laporan Ringkasan</CardTitle>
           <p className="text-base text-slate-600">
             Rekap total pemasukan dan pengeluaran pada rentang tanggal tertentu.
           </p>
@@ -109,25 +109,25 @@ export default function LaporanRingkasanPage() {
 
       <CardContent className="space-y-6">
         {isLoading && !data ? (
-          <p className="text-center text-lg text-slate-600">Memuat data...</p>
+          <p className="text-center text-sm text-slate-600">Memuat data...</p>
         ) : (
           <>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="rounded-lg border border-green-200 bg-green-50 p-6">
                 <p className="text-base text-green-700">Total Pemasukan</p>
-                <p className="text-3xl font-bold text-green-600">
+                <p className="text-base font-bold text-green-600">
                   {formatCurrency(data?.totals?.pemasukan ?? 0)}
                 </p>
               </div>
               <div className="rounded-lg border border-red-200 bg-red-50 p-6">
                 <p className="text-base text-red-700">Total Pengeluaran</p>
-                <p className="text-3xl font-bold text-red-600">
+                <p className="text-base font-bold text-red-600">
                   {formatCurrency(data?.totals?.pengeluaran ?? 0)}
                 </p>
               </div>
-              <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
-                <p className="text-base text-blue-700">Saldo Bersih</p>
-                <p className="text-3xl font-bold text-blue-600">
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-6">
+                <p className="text-base text-emerald-700">Saldo Bersih</p>
+                <p className="text-base font-bold text-emerald-600">
                   {formatCurrency(data?.totals?.saldo ?? 0)}
                 </p>
               </div>
@@ -154,7 +154,7 @@ export default function LaporanRingkasanPage() {
                         className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3"
                       >
                         <div>
-                          <p className="text-lg font-semibold text-slate-800">
+                          <p className="text-sm font-semibold text-slate-800">
                             {row.subkategori}
                           </p>
                           <p className="text-sm text-slate-500">
@@ -162,7 +162,7 @@ export default function LaporanRingkasanPage() {
                           </p>
                         </div>
                         <p
-                          className={`text-xl font-bold ${
+                          className={`text-base font-bold ${
                             row.jenis === 'pemasukan' ? 'text-green-600' : 'text-red-600'
                           }`}
                         >
@@ -174,7 +174,7 @@ export default function LaporanRingkasanPage() {
                 </Card>
               </div>
             ) : (
-              <p className="text-center text-lg text-slate-600">
+              <p className="text-center text-sm text-slate-600">
                 Tidak ada transaksi pada rentang tanggal ini.
               </p>
             )}
@@ -182,7 +182,7 @@ export default function LaporanRingkasanPage() {
             <button
               type="button"
               onClick={() => refetch()}
-              className="w-full rounded-lg border border-slate-200 bg-white py-3 text-base font-medium text-slate-600 hover:border-sky-200 hover:text-sky-600"
+              className="w-full rounded-lg border border-slate-200 bg-white py-3 text-base font-medium text-slate-600 hover:border-emerald-200 hover:text-emerald-600"
             >
               Segarkan Data
             </button>

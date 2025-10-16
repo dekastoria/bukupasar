@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 
@@ -91,7 +91,7 @@ export default function LaporanHarianPage() {
       <CardHeader>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <CardTitle className="text-2xl text-slate-800">
+            <CardTitle className="text-sm text-slate-800">
               Laporan Harian
             </CardTitle>
             <p className="text-base text-slate-600">
@@ -140,25 +140,25 @@ export default function LaporanHarianPage() {
 
       <CardContent className="space-y-6">
         {isLoading && !data ? (
-          <p className="text-center text-lg text-slate-600">Memuat data...</p>
+          <p className="text-center text-sm text-slate-600">Memuat data...</p>
         ) : (
           <>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="rounded-lg border border-green-200 bg-green-50 p-4">
                 <p className="text-sm text-green-700">Total Pemasukan</p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-sm font-bold text-green-600">
                   {formatCurrency(data?.totals?.pemasukan ?? 0)}
                 </p>
               </div>
               <div className="rounded-lg border border-red-200 bg-red-50 p-4">
                 <p className="text-sm text-red-700">Total Pengeluaran</p>
-                <p className="text-2xl font-bold text-red-600">
+                <p className="text-sm font-bold text-red-600">
                   {formatCurrency(data?.totals?.pengeluaran ?? 0)}
                 </p>
               </div>
-              <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                <p className="text-sm text-blue-700">Saldo</p>
-                <p className="text-2xl font-bold text-blue-600">
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+                <p className="text-sm text-emerald-700">Saldo</p>
+                <p className="text-sm font-bold text-emerald-600">
                   {formatCurrency(data?.saldo ?? 0)}
                 </p>
               </div>
@@ -172,7 +172,7 @@ export default function LaporanHarianPage() {
 
             <div className="rounded-xl border border-slate-200">
               {filteredTransactions.length === 0 ? (
-                <p className="p-8 text-center text-lg text-slate-600">
+                <p className="p-8 text-center text-sm text-slate-600">
                   Tidak ada transaksi yang sesuai filter.
                 </p>
               ) : (

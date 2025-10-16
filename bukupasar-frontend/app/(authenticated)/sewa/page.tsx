@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -156,7 +156,7 @@ export default function SewaPage() {
             >
               <ArrowLeft className="h-6 w-6" />
             </Button>
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+            <h1 className="text-sm md:text-base font-bold text-slate-900">
               Pembayaran Sewa
             </h1>
           </div>
@@ -168,7 +168,7 @@ export default function SewaPage() {
         {/* Tenant Search */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Pilih Penyewa</CardTitle>
+            <CardTitle className="text-sm">Pilih Penyewa</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <TenantSearch
@@ -191,7 +191,7 @@ export default function SewaPage() {
                     )}`,
                   });
                 }}
-                className="h-12 text-lg"
+                className="h-12 text-sm"
               >
                 Cek Tunggakan
               </Button>
@@ -209,18 +209,18 @@ export default function SewaPage() {
                   "h-5 w-5",
                   selectedTenant.outstanding > 0 ? "text-red-600" : "text-green-600"
                 )} />
-                <AlertDescription className="text-lg">
+                <AlertDescription className="text-sm">
                   <div className="space-y-1">
                     <p className="font-medium">
                       {selectedTenant.rental_type && (
-                        <span className="text-blue-600">
+                        <span className="text-emerald-600">
                           {selectedTenant.rental_type.nama}{' '}
                         </span>
                       )}
                       {selectedTenant.nomor_lapak} - {selectedTenant.nama}
                     </p>
                     <p className={cn(
-                      "text-xl font-bold",
+                      "text-base font-bold",
                       selectedTenant.outstanding > 0 ? "text-red-700" : "text-green-700"
                     )}>
                       Tunggakan: {formatCurrency(selectedTenant.outstanding)}
@@ -241,12 +241,12 @@ export default function SewaPage() {
         {selectedTenant && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">Detail Pembayaran</CardTitle>
+              <CardTitle className="text-sm">Detail Pembayaran</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Jumlah */}
               <div className="space-y-2">
-                <Label htmlFor="jumlah" className="text-xl font-medium flex items-center gap-2">
+                <Label htmlFor="jumlah" className="text-base font-medium flex items-center gap-2">
                   <DollarSign className="h-5 w-5" />
                   Jumlah Bayar
                 </Label>
@@ -262,7 +262,7 @@ export default function SewaPage() {
                     value={jumlah}
                     onChange={(e) => handleJumlahChange(e.target.value)}
                     className={cn(
-                      "h-14 pl-12 text-xl",
+                      "h-9 pl-12 text-xl",
                       errors.jumlah && "border-red-500"
                     )}
                   />
@@ -284,7 +284,7 @@ export default function SewaPage() {
 
               {/* Tanggal */}
               <div className="space-y-2">
-                <Label htmlFor="tanggal" className="text-xl font-medium flex items-center gap-2">
+                <Label htmlFor="tanggal" className="text-base font-medium flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
                   Tanggal Bayar
                 </Label>
@@ -294,7 +294,7 @@ export default function SewaPage() {
                   value={tanggal}
                   onChange={(e) => setTanggal(e.target.value)}
                   className={cn(
-                    "h-14 text-xl",
+                    "h-9 text-xl",
                     errors.tanggal && "border-red-500"
                   )}
                 />
@@ -305,7 +305,7 @@ export default function SewaPage() {
 
               {/* Catatan */}
               <div className="space-y-2">
-                <Label htmlFor="catatan" className="text-xl font-medium flex items-center gap-2">
+                <Label htmlFor="catatan" className="text-base font-medium flex items-center gap-2">
                   <FileText className="h-5 w-5" />
                   Catatan (Opsional)
                 </Label>
@@ -315,7 +315,7 @@ export default function SewaPage() {
                   value={catatan}
                   onChange={(e) => setCatatan(e.target.value)}
                   rows={3}
-                  className="text-lg resize-none"
+                  className="text-sm resize-none"
                 />
               </div>
             </CardContent>
@@ -329,14 +329,14 @@ export default function SewaPage() {
               type="button"
               variant="outline"
               onClick={handleReset}
-              className="h-14 text-xl flex-1"
+              className="h-9 text-xl flex-1"
               disabled={createPayment.isPending}
             >
               Reset
             </Button>
             <Button
               type="submit"
-              className="h-14 text-xl flex-1 bg-green-600 hover:bg-green-700"
+              className="h-9 text-xl flex-1 bg-green-600 hover:bg-green-700"
               disabled={createPayment.isPending || selectedTenant.outstanding === 0}
             >
               {createPayment.isPending ? 'Menyimpan...' : 'Catat Pembayaran'}
