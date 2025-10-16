@@ -21,6 +21,10 @@ export interface AuthUser {
   username: string;
   market_id: number;
   email?: string | null;
+  phone?: string | null;
+  foto_profile?: string | null;
+  last_login_at?: string | null;
+  market_name?: string | null;
   role?: string | null;
   roles?: string[];
 }
