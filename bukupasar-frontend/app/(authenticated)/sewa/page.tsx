@@ -18,7 +18,6 @@ interface Tenant {
   outstanding: number;
   rental_type?: {
     nama: string;
-    tarif: number;
   } | null;
 }
 
@@ -151,10 +150,8 @@ export default function SewaPage() {
                   <TableRow>
                     <TableHead className="text-xs w-12">No</TableHead>
                     <TableHead className="text-xs">Nama Penyewa</TableHead>
-                    <TableHead className="text-xs">Nomor Toko</TableHead>
                     <TableHead className="text-xs">Jenis Sewa</TableHead>
-                    <TableHead className="text-xs">Telepon</TableHead>
-                    <TableHead className="text-xs text-right">Outstanding</TableHead>
+                    <TableHead className="text-xs">Nomor Toko</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -167,23 +164,18 @@ export default function SewaPage() {
                       <TableCell className="text-sm text-slate-500">{index + 1}</TableCell>
                       <TableCell className="text-sm font-medium text-slate-800">
                         {tenant.nama}
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        <span className="inline-flex items-center px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">
-                          {tenant.nomor_lapak}
-                        </span>
+                        {tenant.outstanding > 0 && (
+                          <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
+                            Tunggakan
+                          </span>
+                        )}
                       </TableCell>
                       <TableCell className="text-sm text-slate-600">
                         {tenant.rental_type?.nama || '-'}
                       </TableCell>
-                      <TableCell className="text-sm text-slate-600">
-                        {tenant.hp || '-'}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <span className={`text-sm font-semibold ${
-                          tenant.outstanding > 0 ? 'text-red-600' : 'text-emerald-600'
-                        }`}>
-                          {formatCurrency(tenant.outstanding)}
+                      <TableCell className="text-sm">
+                        <span className="inline-flex items-center px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">
+                          {tenant.nomor_lapak}
                         </span>
                       </TableCell>
                     </TableRow>

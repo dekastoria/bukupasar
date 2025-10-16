@@ -22,9 +22,11 @@ interface Tenant {
   hp: string | null;
   alamat: string | null;
   outstanding: number;
+  tarif_sewa: number;
+  tanggal_mulai_sewa: string | null;
+  tanggal_akhir_sewa: string | null;
   rental_type?: {
     nama: string;
-    tarif: number;
   } | null;
 }
 
@@ -174,12 +176,73 @@ export function TenantDetailModal({ tenantId, isOpen, onClose, onPaymentSuccess 
                     <p className="text-xs text-slate-500">Jenis Sewa</p>
                     <p className="font-semibold text-emerald-600">
                       {tenant.rental_type?.nama || 'Belum ditentukan'}
-                      {tenant.rental_type?.tarif && (
-                        <span className="text-slate-600 font-normal ml-2">
-                          • {formatCurrency(tenant.rental_type.tarif)}/bulan
-                        </span>
-                      )}
                     </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Rental Period */}
+            {(tenant.tanggal_mulai_sewa || tenant.tanggal_akhir_sewa) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Periode Sewa
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-xs text-slate-500">Mulai Sewa</p>
+                      <p className="text-slate-800">
+                        {tenant.tanggal_mulai_sewa
+                          ? new Date(tenant.tanggal_mulai_sewa).toLocaleDateString('id-ID', {
+                              day: '2-digit',
+                              month: 'long',
+                              year: 'numeric',
+                            })
+                          : '-'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Akhir Sewa</p>
+                      <p className="text-slate-800">
+                        {tenant.tanggal_akhir_sewa
+                          ? new Date(tenant.tanggal_akhir_sewa).toLocaleDateString('id-ID', {
+                              day: '2-digit',
+                              month: 'long',
+                              year: 'numeric',
+                            })
+                          : '-'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Contact Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  Data Pribadi
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="flex items-start gap-2">
+                  <Phone className="h-4 w-4 text-slate-400 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-slate-500">Nomor Telepon</p>
+                    <p className="text-slate-800">{tenant.hp || '-'}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="h-4 w-4 text-slate-400 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-slate-500">Alamat</p>
+                    <p className="text-slate-800">{tenant.alamat || '-'}</p>
                   </div>
                 </div>
               </CardContent>
@@ -222,9 +285,9 @@ export function TenantDetailModal({ tenantId, isOpen, onClose, onPaymentSuccess 
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-xs text-slate-600">Tarif Sewa/Bulan</p>
+                    <p className="text-xs text-slate-600">Tarif Sewa/Periode</p>
                     <p className="text-base font-bold text-slate-800">
-                      {tenant.rental_type?.tarif ? formatCurrency(tenant.rental_type.tarif) : '-'}
+                      {tenant.tarif_sewa ? formatCurrency(tenant.tarif_sewa) : '-'}
                     </p>
                   </div>
                   <div>
