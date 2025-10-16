@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Store, ShoppingBag } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -43,16 +43,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center px-4 py-10">
-      <div className="mb-6 text-center">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Selamat Datang di</p>
-        <h1 className="text-xl font-semibold text-slate-800 mt-1">Bukupasar</h1>
-        <p className="text-sm text-slate-600 mt-1 max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-emerald-50 flex flex-col items-center justify-center px-4 py-10 relative overflow-hidden">
+      {/* Decorative circles */}
+      <div className="absolute top-20 right-10 w-64 h-64 bg-emerald-200 rounded-full opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-20 left-10 w-80 h-80 bg-emerald-300 rounded-full opacity-10 blur-3xl"></div>
+      
+      {/* Logo & Header */}
+      <div className="mb-6 text-center relative z-10">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg mb-3">
+          <ShoppingBag className="h-8 w-8 text-white" strokeWidth={2.5} />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-800 mb-1">Bukupasar</h1>
+        <p className="text-sm text-slate-600 max-w-md">
           Aplikasi pencatatan keuangan pasar tradisional
         </p>
       </div>
 
-      <Card className="w-full max-w-md shadow-lg">
+      <Card className="w-full max-w-md shadow-xl border-slate-200/50 backdrop-blur-sm bg-white/95 relative z-10">
         <CardHeader className="pb-3 text-center sm:text-left">
           <CardTitle className="text-lg text-slate-800">Masuk ke Akun Anda</CardTitle>
           <CardDescription className="text-sm text-slate-600">
