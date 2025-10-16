@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Intervention\Image\Laravel\Facades\Image;
 
 class ProfileController extends Controller
 {
@@ -75,18 +77,30 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($user->foto_profile);
         }
 
-        // Store new photo
-        $path = $request->file('photo')->store('profile-photos', 'public');
+        // Process and compress image
+        $image = Image::read($request->file('photo'));
+        
+        // Resize to max 400x400 while maintaining aspect ratio
+        $image->scale(width: 400, height: 400);
+        
+        // Encode as JPEG with 85% quality for compression
+        $encoded = $image->toJpeg(quality: 85);
+        
+        // Generate unique filename
+        $filename = 'profile-photos/' . Str::uuid() . '.jpg';
+        
+        // Store compressed image
+        Storage::disk('public')->put($filename, $encoded);
 
         // Update user
-        $user->update(['foto_profile' => $path]);
+        $user->update(['foto_profile' => $filename]);
 
-        $photoUrl = Storage::disk('public')->url($path);
+        $photoUrl = url('storage/' . $filename);
 
         return response()->json([
             'message' => 'Foto profil berhasil diupload.',
             'data' => [
-                'foto_profile' => $path,
+                'foto_profile' => $photoUrl,
                 'photo_url' => $photoUrl,
             ],
         ]);
