@@ -18,10 +18,10 @@ export default function LaporanLayout({
   const pathname = usePathname();
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-2">
-        <h2 className="text-3xl font-semibold text-slate-800">Laporan Keuangan</h2>
-        <p className="text-lg text-slate-600">
+    <div className="space-y-4">
+      <header className="space-y-1">
+        <h2 className="text-lg font-semibold text-slate-800">Laporan Keuangan</h2>
+        <p className="text-sm text-slate-600">
           Lihat detail transaksi harian atau ringkasan periode tertentu.
         </p>
       </header>
@@ -34,7 +34,7 @@ export default function LaporanLayout({
               key={tab.href}
               href={tab.href}
               className={cn(
-                'rounded-xl border px-4 py-3 text-center text-base font-semibold transition-all duration-150',
+                'rounded-xl border px-4 py-2 text-center text-sm font-semibold transition-all duration-150',
                 active
                   ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow'
                   : 'border-slate-200 bg-white text-slate-500 hover:border-emerald-200 hover:text-emerald-600'
